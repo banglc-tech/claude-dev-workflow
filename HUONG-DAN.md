@@ -19,7 +19,9 @@
 
 Mở Claude Code tại thư mục gốc repo, đang ở nhánh `dev` đã pull mới nhất, rồi gõ lệnh. Không tự tạo nhánh trước, Claude sẽ tạo.
 
-## 3. Trước khi giao: issue phải đủ
+## 3. Trước khi giao: bản ghi trên Base phải đủ
+
+Task và lỗi nằm trên Lark Base `BLUEMARQ-ONE`, Claude tự đọc qua MCP. Bạn chỉ cần đưa **Mã** (trường Mã trên Base). Chi tiết các trường và luồng câu hỏi: `DAU-VAO-LARK-BASE.md`.
 
 Claude kiểm tra ở bước đầu và DỪNG nếu thiếu. Tự kiểm tra trước để khỏi mất một vòng.
 
@@ -125,6 +127,8 @@ Làm issue mới thì Claude tạo thư mục mới, không dùng lại sổ cũ
 - Chỉ mở MR khi reviewer kết luận **CHỐT**. Kết luận **CHẶN** thì không mở, dù bạn thấy ổn.
 - Người review MR không phải người giao Claude làm. Người review đọc cả báo cáo reviewer trong sổ bàn giao.
 - Chỉ con người merge. Claude không push lên `dev`, không merge, và settings đã chặn việc này.
+- Sau khi mở MR, Jenkins chạy `scripts/check-mr.sh` kiểm tra tên nhánh, tiêu đề, mô tả, nhãn. Đỏ thì sửa theo dòng CHẶN. Xanh rồi gõ `/mr-review <số MR>` để Claude review nội dung và gắn nhãn `review::qua`, `review::can-xem` hoặc `review::chan`. Chỉ `review::qua` là người review có thể xác nhận nhanh.
+- Mức MR, điều kiện merge, thời hạn review và cách xử lý khi `dev` hỏng: xem `QUY-TRINH-MERGE.md`.
 
 ## 9. Chạy qua đêm
 

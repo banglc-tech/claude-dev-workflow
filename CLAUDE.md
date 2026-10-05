@@ -13,14 +13,20 @@
   - Test: `<lệnh>`
   - Lint / type check: `<lệnh>`
 
+## Đầu vào
+- Task, lỗi, câu hỏi và trạng thái nằm trên Lark Base `BLUEMARQ-ONE` (bảng Tasks, Bugs, Decisions); đặc tả là Lark Docs link từ task. Đọc qua MCP `lark-ihouzz`, theo `DAU-VAO-LARK-BASE.md`. Không nhận yêu cầu qua chat.
+- Có câu hỏi nghiệp vụ hoặc rủi ro cao: comment lên đặc tả + tạo ticket Decisions + ghi Ghi chú Claude, rồi dừng. Không đoán.
+- Trên Lark chỉ được: tạo bản ghi Decisions, cập nhật Trạng thái / Nhánh / MR / Ghi chú Claude, tạo comment. Không xóa, không sửa tài liệu, không gửi tin nhắn.
+
 ## Quy trình bắt buộc
-- Tính năng: `/feature <số issue>`. Lỗi: `/bugfix <số issue>`.
+- Tính năng: `/feature <Mã task>`. Lỗi: `/bugfix <Mã lỗi>`. Mã lấy từ trường Mã trên Base.
 - Câu hỏi còn mở: gọi `decider` (model fable). Chỉ câu hỏi kỹ thuật trong phạm vi được tự quyết; nghiệp vụ hỏi BA, rủi ro cao hỏi Tech Lead.
 - Lập kế hoạch trước, code sau. Dừng lại chờ dev duyệt kế hoạch hoặc nguyên nhân gốc.
 - Nhánh: `feature/<số issue>-<tên ngắn>` hoặc `fix/<số issue>-<tên ngắn>`, tạo từ `dev`.
-- Commit: `<loại>(#<số issue>): <mô tả>`, ví dụ `feat(#123): giữ chỗ căn hộ`.
+- Commit: `<loại>(#<Mã>): <mô tả>`, ví dụ `feat(#123): giữ chỗ căn hộ`.
 - MR: tiêu đề `[<tính năng>] <việc> (#<số issue>)`, nhãn `feature::<tính năng>` hoặc `bug`, dùng MR template.
-- Chỉ con người được merge. Claude không push lên `dev`, không merge.
+- Review MR: `/mr-review <số MR>`. Chỉ kết luận QUA khi mọi vấn đề ở mức Gợi ý; không approve, không merge.
+- Chỉ con người được merge, theo `QUY-TRINH-MERGE.md`: squash merge, người duyệt bấm merge, MR mức Rủi ro cao cần Bằng hoặc anh Huy. Claude không push lên `dev`, không merge.
 
 ## Vùng cấm
 - Không sửa: Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo `bluemarq-deploy`, `.env*`.

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "lark-ihouzz": {
+      "type": "http",
+      "url": "<URL MCP Lark của iHouzz>",
+      "headers": { "Authorization": "Bearer ${LARK_MCP_TOKEN}" }
+    }
+  }
+}

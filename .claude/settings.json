@@ -18,7 +18,27 @@
       "Edit(./Jenkinsfile)",
       "Edit(./Dockerfile)",
       "Edit(./docker-compose*)",
-      "Edit(./.claude/settings.json)"
+      "Edit(./.claude/settings.json)",
+      "mcp__lark-ihouzz__lark-api-ihouzz-base-v3-delete-record",
+      "mcp__lark-ihouzz__lark-api-ihouzz-drive-delete-file",
+      "mcp__lark-ihouzz__lark-api-ihouzz-drive-upload-file",
+      "mcp__lark-ihouzz__lark-api-ihouzz-drive-share-file",
+      "mcp__lark-ihouzz__lark-api-ihouzz-docx-append-blocks",
+      "mcp__lark-ihouzz__lark-api-ihouzz-docx-append-markdown",
+      "mcp__lark-ihouzz__lark-api-ihouzz-docx-append-text",
+      "mcp__lark-ihouzz__lark-api-ihouzz-docx-create-document",
+      "mcp__lark-ihouzz__lark-api-ihouzz-docx-delete-blocks",
+      "mcp__lark-ihouzz__lark-api-ihouzz-docx-update-block",
+      "mcp__lark-ihouzz__lark-api-ihouzz-im-send-message",
+      "mcp__lark-ihouzz__lark-api-ihouzz-calendar-create-event",
+      "mcp__lark-ihouzz__lark-api-ihouzz-calendar-delete-event",
+      "mcp__lark-ihouzz__lark-api-ihouzz-task-create-task",
+      "mcp__lark-ihouzz__lark-api-ihouzz-task-delete-task",
+      "mcp__lark-ihouzz__lark-api-ihouzz-task-update-task",
+      "mcp__lark-ihouzz__lark-api-ihouzz-sheets-write-range",
+      "mcp__lark-ihouzz__lark-api-ihouzz-sheets-append-rows",
+      "mcp__lark-ihouzz__lark-api-ihouzz-sheets-create-spreadsheet",
+      "mcp__lark-ihouzz__lark-api-ihouzz-base-v3-upload-attachment"
     ]
   }
 }

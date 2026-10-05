@@ -28,6 +28,8 @@ Danh sách câu hỏi, sổ bàn giao `.bangiao/<số issue>/`, đặc tả, CLA
 ## Báo cáo
 Agent chính lưu báo cáo này vào `.bangiao/<số issue>/00-quyet-dinh.md` (ghi nối, không ghi đè).
 
-| # | Câu hỏi | Loại | Quyết định hoặc chuyển cho ai | Lý do và căn cứ |
+| # | Câu hỏi | Loại | Quyết định hoặc chuyển cho ai | Lý do và căn cứ | Mục đặc tả | Chặn việc gì | Đề xuất |
+
+Ba cột cuối để agent chính comment lên đúng mục trong đặc tả và tạo bản ghi Decisions (xem `DAU-VAO-LARK-BASE.md` mục 4). Trước khi xếp một câu hỏi vào loại 2 hoặc 3, đọc bảng Decisions: câu hỏi đã có ticket Đã chốt thì áp dụng quyết định đó như loại 1 với căn cứ là ticket; đã có ticket Chưa chốt thì ghi "trùng ticket <mã>", không tạo mới.
 
 Cuối báo cáo: "Tiếp tục được" (chỉ còn loại 1) hoặc "Phải dừng" (còn loại 2 hoặc 3, kèm danh sách việc bị chặn).
