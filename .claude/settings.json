@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push origin dev:*)",
+      "Bash(git push origin main:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git branch -D:*)",
+      "Bash(glab mr merge:*)",
+      "Bash(kubectl:*)",
+      "Bash(helm:*)",
+      "Bash(rm -rf:*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./Jenkinsfile)",
+      "Edit(./Dockerfile)",
+      "Edit(./docker-compose*)",
+      "Edit(./.claude/settings.json)"
+    ]
+  }
+}
