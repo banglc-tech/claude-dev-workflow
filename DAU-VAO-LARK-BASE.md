@@ -1,7 +1,7 @@
 # Đầu vào của Dev: đặc tả, task, lỗi và câu hỏi nằm trên Lark Base
 
 > Ngoài source code trên GitLab, mọi đầu vào của Dev nằm ở **một Base duy nhất**: `BLUEMARQ` (Lark Drive › BLUEMARQ). Claude đọc Base và tài liệu qua **MCP Lark của iHouzz**, không đọc qua link dán tay hay nội dung copy vào chat.
-> Chủ sở hữu quy định: Bằng. Chủ sở hữu dữ liệu trên Base: PM và BA.
+> Chủ sở hữu quy định: Tech Lead. Chủ sở hữu dữ liệu trên Base: PM và BA.
 
 ## 1. Nguồn dữ liệu
 
@@ -19,7 +19,7 @@ Base là nơi duy nhất ghi trạng thái task và lỗi. GitLab chỉ giữ nh
 
 ## 2. Trường bắt buộc trên Base
 
-Bằng và PM bổ sung các trường này một lần. Thiếu trường là Claude dừng ở bước kiểm tra đầu vào.
+Tech Lead và PM bổ sung các trường này một lần. Thiếu trường là Claude dừng ở bước kiểm tra đầu vào.
 
 **Tasks** (đã có: Hạng mục, MD ước tính, Spec liên kết, Hạn, Nhóm, Wave, Trạng thái, Người phụ trách)
 
@@ -62,7 +62,7 @@ Bằng và PM bổ sung các trường này một lần. Thiếu trường là C
 | Link comment | Link | Comment Claude đã đặt trên đặc tả |
 | Đề xuất | Văn bản dài | Phương án Claude đề xuất (với loại Rủi ro cao: 2 phương án) |
 
-**Quyết định Claude** (bảng mới, nơi Bằng xem mọi việc decider đã tự quyết)
+**Quyết định Claude** (bảng mới, nơi Tech Lead xem mọi việc decider đã tự quyết)
 
 | Trường | Kiểu |
 | --- | --- |
@@ -71,9 +71,9 @@ Bằng và PM bổ sung các trường này một lần. Thiếu trường là C
 | Nội dung · Quyết định · Căn cứ · Hoàn tác bằng | Văn bản dài |
 | Ngày | Ngày tạo |
 | Trạng thái | Chọn một: Chưa xem / Đã xem / Bác bỏ |
-| Ghi chú của Bằng | Văn bản dài |
+| Ghi chú của Tech Lead | Văn bản dài |
 
-Bằng xem các dòng Chưa xem trong buổi 9:30. Đổi sang **Bác bỏ** kèm ghi chú thì Claude hoàn tác theo cột "Hoàn tác bằng" ở lần chạy kế tiếp của task đó, và ghi bài học vào CLAUDE.md nếu cùng loại sự cố bị bác bỏ lần thứ hai.
+Tech Lead xem các dòng Chưa xem trong buổi 9:30. Đổi sang **Bác bỏ** kèm ghi chú thì Claude hoàn tác theo cột "Hoàn tác bằng" ở lần chạy kế tiếp của task đó, và ghi bài học vào CLAUDE.md nếu cùng loại sự cố bị bác bỏ lần thứ hai.
 
 Giá trị của **Trạng thái** trong Decisions giữ nguyên: Chưa chốt / Đã chốt. Khi Đã chốt, BA cập nhật đặc tả trước rồi mới đổi trạng thái, theo quy định "Thay đổi yêu cầu đi qua BA".
 
@@ -89,9 +89,9 @@ Lệnh `/feature <Mã>` và `/bugfix <Mã>` bắt đầu bằng việc đọc Ba
 
 Khi mở MR: điền link MR vào **Nhánh / MR**, đổi Trạng thái sang **Chờ duyệt** (Bugs: Chờ test sau khi merge). MR template ghi `Base: <link bản ghi>` thay cho `Closes #`.
 
-## 4. Khi quy trình bị vướng: decider quyết trước, không quyết được mới hỏi Bằng
+## 4. Khi quy trình bị vướng: decider quyết trước, không quyết được mới hỏi Tech Lead
 
-Mọi sự cố trong dây chuyền (câu hỏi mở, thiếu đầu vào, test fail, reviewer chặn, check-mr chặn, pipeline đỏ, conflict…) đi qua `decider` trước. Decider quyết khi có căn cứ và hoàn tác được; agent chính thực thi và ghi vào bảng **Quyết định Claude** để Bằng xem lại, quy trình không dừng. Phần dưới đây áp dụng cho các dòng decider kết luận **HỎI BẰNG**: Người quyết mặc định là Bằng; câu hỏi nghiệp vụ thì Người quyết là BA (PM nếu là phạm vi hoặc hạn), rủi ro cao là Tech Lead. Bằng luôn nằm trong danh sách theo dõi của ticket. Agent chính làm ba việc, theo đúng thứ tự, rồi mới dừng:
+Mọi sự cố trong dây chuyền (câu hỏi mở, thiếu đầu vào, test fail, reviewer chặn, check-mr chặn, pipeline đỏ, conflict…) đi qua `decider` trước. Decider quyết khi có căn cứ và hoàn tác được; agent chính thực thi và ghi vào bảng **Quyết định Claude** để Tech Lead xem lại, quy trình không dừng. Phần dưới đây áp dụng cho các dòng decider kết luận **HỎI NGƯỜI**: Người quyết mặc định là Tech Lead; câu hỏi nghiệp vụ thì Người quyết là BA (PM nếu là phạm vi hoặc hạn), rủi ro cao là Tech Lead. Tech Lead luôn nằm trong danh sách theo dõi của ticket. Agent chính làm ba việc, theo đúng thứ tự, rồi mới dừng:
 
 1. **Comment lên đúng chỗ trong đặc tả** bằng `drive-create-comment` trên tài liệu Spec liên kết. Nội dung comment theo mẫu:
    ```

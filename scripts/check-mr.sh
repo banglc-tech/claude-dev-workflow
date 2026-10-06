@@ -56,11 +56,11 @@ if git rev-parse --verify -q origin/dev >/dev/null 2>&1; then
   LINES="$(git diff --numstat origin/dev...HEAD -- . ':(exclude)*test*' ':(exclude)*spec*' ':(exclude)*.lock' ':(exclude)*.snap' ':(exclude)*.min.*' \
     | awk '{a+=$1+$2} END{print a+0}')"
   if (( LINES > 400 )); then
-    echo "CẢNH BÁO: diff $LINES dòng (>400). Cần Bằng đồng ý hoặc tách MR."
+    echo "CẢNH BÁO: diff $LINES dòng (>400). Cần Tech Lead đồng ý hoặc tách MR."
   fi
   # 6. File cấm
   git diff --name-only origin/dev...HEAD | grep -E '^(Jenkinsfile|Dockerfile|docker-compose.*|\.env.*|k8s/.*|\.claude/.*|CLAUDE\.md)$' \
-    | while read -r f; do echo "CẢNH BÁO: MR sửa file hạ tầng '$f' → mức Hạ tầng, chỉ Bằng duyệt."; done
+    | while read -r f; do echo "CẢNH BÁO: MR sửa file hạ tầng '$f' → mức Hạ tầng, chỉ Tech Lead duyệt."; done
   # 7. Test bị xóa hoặc skip
   if git diff origin/dev...HEAD -- '*test*' '*spec*' | grep -E '^\-.*\b(it|test|describe)\(' >/dev/null; then
     echo "CẢNH BÁO: có test bị xóa hoặc đổi so với dev. Reviewer phải xem."

@@ -1,6 +1,6 @@
 # Quy trình duyệt và merge vào nhánh `dev`
 
-> Áp dụng cho mọi MR vào `dev` của dự án Sales Zone · Bluemarq. Chủ sở hữu: Bằng (Tech Lead).
+> Áp dụng cho mọi MR vào `dev` của dự án Sales Zone · Bluemarq. Chủ sở hữu: Tech Lead.
 > Nguyên tắc: **`dev` luôn chạy được.** Một MR vào `dev` là một issue đã xong, đã có test, đã được người khác xem.
 
 ## 1. Ba mức MR
@@ -11,7 +11,7 @@ Người mở MR tự xếp mức ngay khi mở, ghi vào mục "Mức" của MR
 | --- | --- | --- | --- |
 | **Thường** | Tính năng hoặc lỗi trong phạm vi một module, không đổi schema, không thêm thư viện, không đụng phân quyền hay thanh toán | Một dev khác trong team (theo lịch xoay vòng) | 1 |
 | **Rủi ro cao** | Có migration hoặc đổi schema; thêm hoặc nâng thư viện; đụng phân quyền, đăng nhập, thanh toán, dữ liệu khách hàng; sửa API dùng chung; thay đổi cấu trúc thư mục | Tech Lead, **cộng thêm** một dev khác | 2 |
-| **Hạ tầng** | Jenkinsfile, Dockerfile, docker-compose, cấu hình Kubernetes, `.claude/settings.json`, `CLAUDE.md` | Bằng | 1 (Bằng) |
+| **Hạ tầng** | Jenkinsfile, Dockerfile, docker-compose, cấu hình Kubernetes, `.claude/settings.json`, `CLAUDE.md` | Tech Lead | 1 (Tech Lead) |
 
 MR mức Hạ tầng không được do Claude tạo; dev tự làm bằng tay.
 
@@ -33,7 +33,7 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 - [ ] Không có thư viện mới ngoài kế hoạch; không lộ secret, không có cấu hình môi trường thật
 - [ ] Báo cáo `reviewer` trong sổ bàn giao kết luận **CHỐT**; người review đã đọc báo cáo đó
 - [ ] Người mở MR đã tự chạy thử trên Dev theo từng tiêu chí và ghi kết quả vào MR
-- [ ] MR dưới 400 dòng thay đổi (không tính test và file sinh tự động). Lớn hơn thì tách MR, trừ khi Bằng đồng ý
+- [ ] MR dưới 400 dòng thay đổi (không tính test và file sinh tự động). Lớn hơn thì tách MR, trừ khi Tech Lead đồng ý
 
 ## 3. Review làm gì, trong bao lâu
 
@@ -41,7 +41,7 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 - **Người review** đọc theo thứ tự: issue và tiêu chí đạt → báo cáo `reviewer` trong sổ bàn giao → test → code. Đọc test trước code để biết MR có kiểm chứng đúng điều cần kiểm chứng không.
 - **Comment** ghi rõ mức: **Chặn** (phải sửa mới merge), **Nên sửa** (sửa trong MR này hoặc mở issue mới, người review quyết), **Gợi ý** (tùy người mở MR). Comment mức Chặn phải nêu tiêu chí đạt hoặc rule nào bị vi phạm.
 - **Người mở MR** sửa và trả lời từng comment; sửa xong thì nhấn resolve và ghi "đã sửa ở <commit>". Không resolve comment của người khác khi chưa sửa.
-- Tối đa **2 vòng sửa**. Sang vòng 3 thì hai bên gọi nhau 15 phút thay vì comment tiếp; vẫn không chốt được thì Bằng quyết. Với vòng review nội bộ của Claude (sub agent reviewer), sau 2 vòng là `decider` phân xử và báo Bằng.
+- Tối đa **2 vòng sửa**. Sang vòng 3 thì hai bên gọi nhau 15 phút thay vì comment tiếp; vẫn không chốt được thì Tech Lead quyết. Với vòng review nội bộ của Claude (sub agent reviewer), sau 2 vòng là `decider` phân xử và báo Tech Lead.
 - Code do Claude viết review như code người viết: không nhẹ tay vì "AI viết", không nặng tay vì "AI viết". Kiểm kỹ thêm hai chỗ AI hay mắc: test chỉ để pass, và sửa lan ra ngoài phạm vi.
 
 ## 4. Cách merge
@@ -60,7 +60,7 @@ Code chỉ nằm trên máy một người là code chưa tồn tại với team
 - **Commit dở được phép trên nhánh feature/fix**, tiền tố `wip(#<Mã>): <đang làm gì>`. Khi merge sẽ squash nên lịch sử `dev` không bị bẩn. Commit dở không được chứa test bị skip hay code comment-out để "cho pass".
 - **Ai push:** dev push trong ngày khi làm việc trực tiếp; Claude push lúc kết thúc lượt chạy qua đêm (trước khi ghi Ghi chú Claude), và push sau mỗi bước có commit trong `/feature`, `/bugfix`. `settings.json` chỉ chặn push lên `dev` và `main`, push nhánh feature/fix được phép.
 - **17:00 báo cáo cuối ngày** ghi link commit cuối cùng của từng nhánh đang làm. Nhánh có commit mới trên máy mà chưa push là chưa báo cáo xong.
-- **Nhánh không có push trong 2 ngày làm việc** thì PM hỏi trong buổi 9:30: còn làm không, hay đóng task. Nhánh quá 5 ngày không push thì Bằng xóa nhánh trên GitLab sau khi báo người phụ trách.
+- **Nhánh không có push trong 2 ngày làm việc** thì PM hỏi trong buổi 9:30: còn làm không, hay đóng task. Nhánh quá 5 ngày không push thì Tech Lead xóa nhánh trên GitLab sau khi báo người phụ trách.
 - **Không push bằng force** lên nhánh đã có người khác kéo về; cần sửa lịch sử thì tạo nhánh mới.
 - Mỗi sáng trước khi làm tiếp, kéo `dev` mới nhất về nhánh của mình (`git merge dev` hoặc rebase nếu nhánh chưa ai kéo). Conflict thì xử lý ngay, không để dồn tới lúc mở MR.
 
@@ -72,12 +72,12 @@ Code chỉ nằm trên máy một người là code chưa tồn tại với team
 
 ## 6. Cài đặt GitLab để quy trình được công cụ chặn
 
-Bằng cài một lần trong Settings → Repository → Protected branches và Merge requests. Không ai được tự nới.
+Tech Lead cài một lần trong Settings → Repository → Protected branches và Merge requests. Không ai được tự nới.
 
 | Cài đặt | Giá trị |
 | --- | --- |
 | Protected branch `dev` | Allowed to push: **No one**. Allowed to merge: **Maintainers** |
-| Protected branch `main` | Allowed to push: No one. Allowed to merge: Bằng |
+| Protected branch `main` | Allowed to push: No one. Allowed to merge: Tech Lead |
 | Force push | Tắt trên `dev` và `main` |
 | Merge request approvals | Tối thiểu **1**; rule riêng cho mức Rủi ro cao: **2**, trong đó bắt buộc có Tech Lead (dùng Code Owners cho các thư mục nhạy cảm) |
 | Prevent approval by author | Bật |
@@ -142,7 +142,7 @@ Ba ranh giới không được vượt:
 - **QUA của Claude không phải approval.** Nhãn `review::qua` chỉ rút ngắn thời gian đọc; người duyệt theo mức ở mục 1 vẫn phải approve và bấm merge. GitLab không được cấu hình cho bot approve.
 - **Claude không sửa, không approve, không merge trên MR.** Chỉ comment và đổi nhãn `review::*`.
 
-Theo dõi hằng tuần: Bằng xem tỷ lệ MR Claude kết luận QUA mà người review vẫn tìm ra vấn đề Nên sửa trở lên. Trên 1 trong 10 MR thì rule phân mức đang quá lỏng, siết lại bảng trên và ghi ví dụ vào CLAUDE.md.
+Theo dõi hằng tuần: Tech Lead xem tỷ lệ MR Claude kết luận QUA mà người review vẫn tìm ra vấn đề Nên sửa trở lên. Trên 1 trong 10 MR thì rule phân mức đang quá lỏng, siết lại bảng trên và ghi ví dụ vào CLAUDE.md.
 
 ## 9. Tóm tắt một dòng cho dev
 

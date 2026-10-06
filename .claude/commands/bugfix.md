@@ -16,9 +16,9 @@ Sửa lỗi #$ARGUMENTS theo đúng thứ tự dưới đây. Bạn là agent ch
 
 ## Khi quy trình bị vướng: luôn qua decider trước
 Bất kỳ lúc nào một bước không đi tiếp được (sub agent nêu câu hỏi mở, thiếu đầu vào trên Base, test fail 3 lần, reviewer CHẶN sau 2 vòng, `check-mr.sh` chặn, pipeline đỏ, conflict với `dev`, kế hoạch vượt 1 ngày…), KHÔNG dừng ngay và KHÔNG hỏi dev ngay. Gọi sub agent `decider` với loại sự cố và báo cáo liên quan:
-- Dòng **ĐÃ QUYẾT**: thực thi đúng quyết định, ghi nối vào `.bangiao/$ARGUMENTS/00-quyet-dinh.md`, tạo bản ghi trong bảng *Quyết định Claude* trên Base (Task, Sự cố, Quyết định, Căn cứ, Hoàn tác bằng, Trạng thái = Chưa xem) để Bằng xem lại, rồi đi tiếp.
-- Dòng **HỎI BẰNG**: làm ba việc theo `DAU-VAO-LARK-BASE.md` mục 4 (comment lên đặc tả nếu là câu hỏi về đặc tả; tạo ticket Decisions với Người quyết như decider ghi, mặc định là Bằng; ghi `Chờ Decisions <mã>` vào Ghi chú Claude và đổi Trạng thái task sang Chờ quyết định), rồi DỪNG. Việc không bị chặn thì vẫn làm tiếp.
-- Cùng một sự cố tái diễn sau khi decider đã quyết thì không gọi decider lần hai; tạo ticket cho Bằng ngay.
+- Dòng **ĐÃ QUYẾT**: thực thi đúng quyết định, ghi nối vào `.bangiao/$ARGUMENTS/00-quyet-dinh.md`, tạo bản ghi trong bảng *Quyết định Claude* trên Base (Task, Sự cố, Quyết định, Căn cứ, Hoàn tác bằng, Trạng thái = Chưa xem) để Tech Lead xem lại, rồi đi tiếp.
+- Dòng **HỎI NGƯỜI**: làm ba việc theo `DAU-VAO-LARK-BASE.md` mục 4 (comment lên đặc tả nếu là câu hỏi về đặc tả; tạo ticket Decisions với Người quyết như decider ghi, mặc định là Tech Lead; ghi `Chờ Decisions <mã>` vào Ghi chú Claude và đổi Trạng thái task sang Chờ quyết định), rồi DỪNG. Việc không bị chặn thì vẫn làm tiếp.
+- Cùng một sự cố tái diễn sau khi decider đã quyết thì không gọi decider lần hai; tạo ticket cho Tech Lead ngay.
 decider không thay thế hai điểm dev duyệt (kế hoạch, nguyên nhân gốc). Khi tóm tắt cho dev, liệt kê mọi quyết định decider đã đưa ra trong lần chạy này.
 ## Sổ bàn giao
 Mỗi issue có một thư mục `.bangiao/$ARGUMENTS/` (đã có trong .gitignore), gồm `00-quyet-dinh.md` (decider, ghi nối) và các file dưới đây. Sau mỗi sub agent, lưu nguyên văn báo cáo vào đúng file, và giao cho sub agent sau đọc file của bước trước:

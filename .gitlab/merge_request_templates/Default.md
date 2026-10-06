@@ -8,7 +8,7 @@ Base: <link bản ghi trên BLUEMARQ>  (Mã #<Mã>)
 <!-- Chọn một, xem QUY-TRINH-MERGE.md mục 1 -->
 - [ ] Thường (1 người duyệt)
 - [ ] Rủi ro cao (Tech Lead + 1 dev)
-- [ ] Hạ tầng (Bằng)
+- [ ] Hạ tầng (Tech Lead)
 
 ## Đã làm
 <2–5 dòng>
@@ -26,7 +26,7 @@ Base: <link bản ghi trên BLUEMARQ>  (Mã #<Mã>)
 - [ ] Không thêm thư viện, không sửa file ngoài kế hoạch (hoặc đã ghi lý do)
 - [ ] Báo cáo reviewer không còn vấn đề mức Chặn
 - [ ] Không xóa, skip hay nới lỏng test so với `dev`
-- [ ] Dưới 400 dòng thay đổi (không tính test), hoặc Bằng đã đồng ý
+- [ ] Dưới 400 dòng thay đổi (không tính test), hoặc Tech Lead đã đồng ý
 - [ ] Nhánh đã cập nhật với `dev` mới nhất
 - [ ] Người review không phải người giao Claude làm
 

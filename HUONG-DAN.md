@@ -1,13 +1,13 @@
 # Hướng dẫn dùng Claude Code cho team Dev
 
-> Dành cho dev Sales Zone · Bluemarq. Câu hỏi về quy trình hỏi Bằng (Tech Lead).
+> Dành cho dev Sales Zone · Bluemarq. Câu hỏi về quy trình hỏi Tech Lead.
 > Nguyên tắc chung: Claude làm, dev duyệt, con người merge.
 
 ## 1. Chuẩn bị một lần
 
 1. Cài Claude Code và `glab`, đăng nhập GitLab: `glab auth login`.
 2. Lấy bộ quy trình về máy (`git clone git@github.com:banglc-tech/claude-dev-workflow.git ~/claude-dev-workflow`), kiểm tra `/mcp` đã có MCP Lark (chưa có thì xem `CAI-DAT.md`), rồi trong repo dự án chạy `python3 ~/claude-dev-workflow/scripts/cai-dat.py --kiem-tra`. Repo dự án chưa có quy trình thì làm theo `CAI-DAT.md` mục A. Chi tiết: `CAI-DAT.md`.
-3. Không sửa `.claude/settings.json`. File này chặn Claude merge, force push, chạy `kubectl`, đọc `.env`. Cần nới gì thì nói với Bằng.
+3. Không sửa `.claude/settings.json`. File này chặn Claude merge, force push, chạy `kubectl`, đọc `.env`. Cần nới gì thì nói với Tech Lead.
 4. Cài đặt riêng của bạn (nếu cần) để trong `.claude/settings.local.json`, file này đã nằm trong `.gitignore`.
 
 ## 2. Hai lệnh duy nhất
@@ -56,7 +56,7 @@ Claude kiểm tra ở bước đầu và DỪNG nếu thiếu. Tự kiểm tra t
 - Danh sách file sửa có hợp lý không, có file nào đáng ngờ không.
 - Bảng tiêu chí đạt → test có đủ từng TC không.
 - Có dùng lại component iHouzz Design System và code có sẵn không.
-- Có đề xuất thêm thư viện hay migration không. Nếu có mà chưa bàn với Bằng thì chưa duyệt.
+- Có đề xuất thêm thư viện hay migration không. Nếu có mà chưa bàn với Tech Lead thì chưa duyệt.
 - Mục "Câu hỏi cho BA" còn gì chưa trả lời không.
 
 Trả lời bằng đúng một trong ba câu:
@@ -95,7 +95,7 @@ Không tái hiện được thì Claude dừng và liệt kê cần hỏi Test g
 
 ## 6. Khi Claude gặp vướng
 
-Claude không dừng ngay khi gặp vướng (câu hỏi, thiếu thông tin, test fail, reviewer chặn, pipeline đỏ…). Nó gọi `decider` trước: quyết được thì làm tiếp và ghi vào bảng *Quyết định Claude* trên Base để Bằng xem; không quyết được mới tạo ticket Decisions hỏi Bằng (hoặc BA với câu hỏi nghiệp vụ) rồi dừng. Bạn chỉ cần đọc phần "Quyết định decider" trong tóm tắt cuối mỗi lần chạy.
+Claude không dừng ngay khi gặp vướng (câu hỏi, thiếu thông tin, test fail, reviewer chặn, pipeline đỏ…). Nó gọi `decider` trước: quyết được thì làm tiếp và ghi vào bảng *Quyết định Claude* trên Base để Tech Lead xem; không quyết được mới tạo ticket Decisions hỏi Tech Lead (hoặc BA với câu hỏi nghiệp vụ) rồi dừng. Bạn chỉ cần đọc phần "Quyết định decider" trong tóm tắt cuối mỗi lần chạy.
 
 ### Khi Claude dừng vì câu hỏi còn mở
 
@@ -164,8 +164,8 @@ Không chạy `/bugfix` qua đêm.
 
 - **Claude lặp lại cùng một lỗi**: mỗi sub agent được thử tối đa 3 lần rồi phải dừng và báo. Đọc phần "đã thử" trong báo cáo trước khi bảo thử tiếp.
 - **Claude sửa file ngoài kế hoạch**: báo cáo implementer phải ghi lý do. Không có lý do thì bảo hoàn lại.
-- **Claude làm sai cùng một lỗi lần thứ hai**: ghi vào mục "Bài học" cuối `CLAUDE.md`, dạng `<ngày> — <quy tắc>`, gửi MR cho Bằng duyệt.
-- **Cần nới quyền trong settings.json**: hỏi Bằng, không tự sửa.
+- **Claude làm sai cùng một lỗi lần thứ hai**: ghi vào mục "Bài học" cuối `CLAUDE.md`, dạng `<ngày> — <quy tắc>`, gửi MR cho Tech Lead duyệt.
+- **Cần nới quyền trong settings.json**: hỏi Tech Lead, không tự sửa.
 
 ## 12. Tóm tắt lệnh
 

@@ -8,7 +8,7 @@ Review MR !$ARGUMENTS theo `QUY-TRINH-MERGE.md` mục 8. Bạn chỉ đọc, ch�
 ## Bước 1: Kiểm tra hình thức
 1. Lấy thông tin MR: `glab mr view $ARGUMENTS -F json` → nhánh nguồn, tiêu đề, mô tả, nhãn, số dòng thay đổi.
 2. Ghi mô tả ra file tạm rồi chạy `scripts/check-mr.sh <nhánh> "<tiêu đề>" <file mô tả> "<nhãn>"`.
-3. Script trả CHẶN → gọi `decider` (sự cố: check-mr chặn). Dòng ĐÃ QUYẾT thì sửa theo (đổi tên nhánh, sửa tiêu đề hoặc mô tả MR, gắn nhãn) và chạy lại script; vẫn chặn hoặc HỎI BẰNG thì đăng các dòng CHẶN thành comment trên MR, kết luận **CHẶN – hình thức** và dừng. Không review nội dung khi hình thức chưa đạt.
+3. Script trả CHẶN → gọi `decider` (sự cố: check-mr chặn). Dòng ĐÃ QUYẾT thì sửa theo (đổi tên nhánh, sửa tiêu đề hoặc mô tả MR, gắn nhãn) và chạy lại script; vẫn chặn hoặc HỎI NGƯỜI thì đăng các dòng CHẶN thành comment trên MR, kết luận **CHẶN – hình thức** và dừng. Không review nội dung khi hình thức chưa đạt.
 
 ## Bước 2: Review nội dung
 Checkout nhánh nguồn, gọi sub agent `reviewer` với diff `origin/dev...HEAD` và issue liên kết. Ngoài checklist của reviewer, kiểm thêm:
