@@ -93,7 +93,11 @@ Không tái hiện được thì Claude dừng và liệt kê cần hỏi Test g
 
 **Lỗi trên Production** không đi qua `/bugfix`. Làm theo mục hotfix trong tài liệu Quy trình quản lý source Git & deploy.
 
-## 6. Khi Claude dừng vì câu hỏi còn mở
+## 6. Khi Claude gặp vướng
+
+Claude không dừng ngay khi gặp vướng (câu hỏi, thiếu thông tin, test fail, reviewer chặn, pipeline đỏ…). Nó gọi `decider` trước: quyết được thì làm tiếp và ghi vào bảng *Quyết định Claude* trên Base để Bằng xem; không quyết được mới tạo ticket Decisions hỏi Bằng (hoặc BA với câu hỏi nghiệp vụ) rồi dừng. Bạn chỉ cần đọc phần "Quyết định decider" trong tóm tắt cuối mỗi lần chạy.
+
+### Khi Claude dừng vì câu hỏi còn mở
 
 Sub agent nào có câu hỏi thì Claude gọi `decider` trước khi dừng. decider xếp mỗi câu vào một trong ba loại:
 
@@ -130,9 +134,13 @@ Làm issue mới thì Claude tạo thư mục mới, không dùng lại sổ cũ
 - Sau khi mở MR, Jenkins chạy `scripts/check-mr.sh` kiểm tra tên nhánh, tiêu đề, mô tả, nhãn. Đỏ thì sửa theo dòng CHẶN. Xanh rồi gõ `/mr-review <số MR>` để Claude review nội dung và gắn nhãn `review::qua`, `review::can-xem` hoặc `review::chan`. Chỉ `review::qua` là người review có thể xác nhận nhanh.
 - Mức MR, điều kiện merge, thời hạn review và cách xử lý khi `dev` hỏng: xem `QUY-TRINH-MERGE.md`.
 
+## 8a. Push code hằng ngày
+
+Nhánh đang làm phải lên GitLab ít nhất một lần mỗi ngày trước 17:00, dù chưa xong: `git add . && git commit -m "wip(#<Mã>): đang làm gì" && git push`. Claude tự push sau mỗi bước có commit; bạn chỉ cần kiểm tra trước khi báo cáo 17:00 là commit cuối đã có trên GitLab. Chi tiết: `QUY-TRINH-MERGE.md` mục 4a.
+
 ## 9. Chạy qua đêm
 
-Chỉ với issue tính năng đã có kế hoạch được duyệt sẵn ghi trong issue. Claude đi từ bước test đến bước tóm tắt, ghi kết quả vào comment issue, không push, không mở MR. Sáng hôm sau đọc comment và sổ bàn giao, rồi quyết định mở MR hay sửa.
+Chỉ với issue tính năng đã có kế hoạch được duyệt sẵn ghi trong issue. Claude đi từ bước test đến bước tóm tắt, push nhánh feature (kể cả commit wip) rồi ghi kết quả vào Ghi chú Claude trên Base, không mở MR. Sáng hôm sau đọc comment và sổ bàn giao, rồi quyết định mở MR hay sửa.
 
 Không chạy `/bugfix` qua đêm.
 

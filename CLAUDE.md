@@ -20,10 +20,11 @@
 
 ## Quy trình bắt buộc
 - Tính năng: `/feature <Mã task>`. Lỗi: `/bugfix <Mã lỗi>`. Mã lấy từ trường Mã trên Base.
-- Câu hỏi còn mở: gọi `decider` (model fable). Chỉ câu hỏi kỹ thuật trong phạm vi được tự quyết; nghiệp vụ hỏi BA, rủi ro cao hỏi Tech Lead.
+- Quy trình bị vướng ở đâu (câu hỏi mở, thiếu đầu vào, test fail 3 lần, reviewer chặn, check-mr chặn, pipeline đỏ, conflict): gọi `decider` (model fable) trước, không dừng ngay. decider quyết khi có căn cứ và hoàn tác được, ghi vào bảng Quyết định Claude để Bằng xem; không quyết được mới tạo ticket Decisions hỏi Bằng (nghiệp vụ: BA).
 - Lập kế hoạch trước, code sau. Dừng lại chờ dev duyệt kế hoạch hoặc nguyên nhân gốc.
 - Nhánh: `feature/<số issue>-<tên ngắn>` hoặc `fix/<số issue>-<tên ngắn>`, tạo từ `dev`.
-- Commit: `<loại>(#<Mã>): <mô tả>`, ví dụ `feat(#123): giữ chỗ căn hộ`.
+- Commit: `<loại>(#<Mã>): <mô tả>`, ví dụ `feat(#123): giữ chỗ căn hộ`; commit dở dùng `wip(#<Mã>): …`.
+- Push nhánh feature/fix lên GitLab sau mỗi bước có commit và trước khi kết thúc lượt chạy; mỗi nhánh phải có push ít nhất một lần mỗi ngày trước 17:00.
 - MR: tiêu đề `[<tính năng>] <việc> (#<số issue>)`, nhãn `feature::<tính năng>` hoặc `bug`, dùng MR template.
 - Review MR: `/mr-review <số MR>`. Chỉ kết luận QUA khi mọi vấn đề ở mức Gợi ý; không approve, không merge.
 - Chỉ con người được merge, theo `QUY-TRINH-MERGE.md`: squash merge, người duyệt bấm merge, MR mức Rủi ro cao cần Bằng hoặc anh Huy. Claude không push lên `dev`, không merge.

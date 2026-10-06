@@ -41,7 +41,7 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 - **Người review** đọc theo thứ tự: issue và tiêu chí đạt → báo cáo `reviewer` trong sổ bàn giao → test → code. Đọc test trước code để biết MR có kiểm chứng đúng điều cần kiểm chứng không.
 - **Comment** ghi rõ mức: **Chặn** (phải sửa mới merge), **Nên sửa** (sửa trong MR này hoặc mở issue mới, người review quyết), **Gợi ý** (tùy người mở MR). Comment mức Chặn phải nêu tiêu chí đạt hoặc rule nào bị vi phạm.
 - **Người mở MR** sửa và trả lời từng comment; sửa xong thì nhấn resolve và ghi "đã sửa ở <commit>". Không resolve comment của người khác khi chưa sửa.
-- Tối đa **2 vòng sửa**. Sang vòng 3 thì hai bên gọi nhau 15 phút thay vì comment tiếp; vẫn không chốt được thì Bằng quyết.
+- Tối đa **2 vòng sửa**. Sang vòng 3 thì hai bên gọi nhau 15 phút thay vì comment tiếp; vẫn không chốt được thì Bằng quyết. Với vòng review nội bộ của Claude (sub agent reviewer), sau 2 vòng là `decider` phân xử và báo Bằng.
 - Code do Claude viết review như code người viết: không nhẹ tay vì "AI viết", không nặng tay vì "AI viết". Kiểm kỹ thêm hai chỗ AI hay mắc: test chỉ để pass, và sửa lan ra ngoài phạm vi.
 
 ## 4. Cách merge
@@ -51,6 +51,17 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 - Merge xong: xóa nhánh nguồn (GitLab tự làm), chuyển issue sang **Ready for test**, dán link MR vào dòng việc trên Lark Base và đổi trạng thái sang "Chờ test".
 - Không merge sau **17:00 thứ Sáu** trừ lỗi mức Nghiêm trọng, để không ai phải sửa `dev` cuối tuần.
 - Không bao giờ push thẳng lên `dev`, không force push, không "merge tạm để test". Muốn test chung thì Test kéo nhánh feature về chạy.
+
+## 4a. Push code hằng ngày
+
+Code chỉ nằm trên máy một người là code chưa tồn tại với team. Mỗi nhánh `feature/` và `fix/` đang làm phải được **push lên GitLab ít nhất một lần mỗi ngày, trước 17:00**, kể cả khi chưa xong.
+
+- **Commit dở được phép trên nhánh feature/fix**, tiền tố `wip(#<Mã>): <đang làm gì>`. Khi merge sẽ squash nên lịch sử `dev` không bị bẩn. Commit dở không được chứa test bị skip hay code comment-out để "cho pass".
+- **Ai push:** dev push trong ngày khi làm việc trực tiếp; Claude push lúc kết thúc lượt chạy qua đêm (trước khi ghi Ghi chú Claude), và push sau mỗi bước có commit trong `/feature`, `/bugfix`. `settings.json` chỉ chặn push lên `dev` và `main`, push nhánh feature/fix được phép.
+- **17:00 báo cáo cuối ngày** ghi link commit cuối cùng của từng nhánh đang làm. Nhánh có commit mới trên máy mà chưa push là chưa báo cáo xong.
+- **Nhánh không có push trong 2 ngày làm việc** thì PM hỏi trong buổi 9:30: còn làm không, hay đóng task. Nhánh quá 5 ngày không push thì Bằng xóa nhánh trên GitLab sau khi báo người phụ trách.
+- **Không push bằng force** lên nhánh đã có người khác kéo về; cần sửa lịch sử thì tạo nhánh mới.
+- Mỗi sáng trước khi làm tiếp, kéo `dev` mới nhất về nhánh của mình (`git merge dev` hoặc rebase nếu nhánh chưa ai kéo). Conflict thì xử lý ngay, không để dồn tới lúc mở MR.
 
 ## 5. Khi `dev` hỏng sau merge
 
@@ -107,7 +118,7 @@ Mỗi MR được review tự động hai lớp trước khi đến tay người
 | Nhãn | `feature::<tính năng>` cho nhánh feature, `bug` cho nhánh fix |
 | Test | Không có `skip`, `only`, `xit` thêm vào so với `dev` |
 
-Script còn in **cảnh báo** (không chặn) khi diff trên 400 dòng, khi MR đụng file hạ tầng, hoặc khi có test bị xóa. Người review phải đọc các cảnh báo này.
+Khi script chặn, `/mr-review` gọi `decider`: lỗi hình thức sửa được (tên nhánh, tiêu đề, mô tả, nhãn) thì Claude tự sửa và chạy lại, không làm phiền người. Script còn in **cảnh báo** (không chặn) khi diff trên 400 dòng, khi MR đụng file hạ tầng, hoặc khi có test bị xóa. Người review phải đọc các cảnh báo này.
 
 **Lớp 2: nội dung, chạy bằng `/mr-review <số MR>`** (dev hoặc Jenkins gọi sau khi lớp 1 đạt). Claude dùng sub agent `reviewer`, kiểm thêm mức MR có khai đúng không và mô tả có khớp diff không, rồi xếp mỗi vấn đề vào một trong ba mức:
 

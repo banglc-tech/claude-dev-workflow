@@ -60,6 +60,19 @@ Bằng và PM bổ sung các trường này một lần. Thiếu trường là C
 | Link comment | Link | Comment Claude đã đặt trên đặc tả |
 | Đề xuất | Văn bản dài | Phương án Claude đề xuất (với loại Rủi ro cao: 2 phương án) |
 
+**Quyết định Claude** (bảng mới, nơi Bằng xem mọi việc decider đã tự quyết)
+
+| Trường | Kiểu |
+| --- | --- |
+| Task liên kết | Liên kết sang Tasks hoặc Bugs |
+| Sự cố | Chọn một: Câu hỏi kỹ thuật / Thiếu đầu vào / Kế hoạch vượt 1 ngày / Test fail / Reviewer chặn / Check-mr chặn / Pipeline đỏ / Conflict / Mức MR / Khác |
+| Nội dung · Quyết định · Căn cứ · Hoàn tác bằng | Văn bản dài |
+| Ngày | Ngày tạo |
+| Trạng thái | Chọn một: Chưa xem / Đã xem / Bác bỏ |
+| Ghi chú của Bằng | Văn bản dài |
+
+Bằng xem các dòng Chưa xem trong buổi 9:30. Đổi sang **Bác bỏ** kèm ghi chú thì Claude hoàn tác theo cột "Hoàn tác bằng" ở lần chạy kế tiếp của task đó, và ghi bài học vào CLAUDE.md nếu cùng loại sự cố bị bác bỏ lần thứ hai.
+
 Giá trị của **Trạng thái** trong Decisions giữ nguyên: Chưa chốt / Đã chốt. Khi Đã chốt, BA cập nhật đặc tả trước rồi mới đổi trạng thái, theo quy định "Thay đổi yêu cầu đi qua BA".
 
 ## 3. Claude đọc đầu vào thế nào
@@ -74,9 +87,9 @@ Lệnh `/feature <Mã>` và `/bugfix <Mã>` bắt đầu bằng việc đọc Ba
 
 Khi mở MR: điền link MR vào **Nhánh / MR**, đổi Trạng thái sang **Chờ duyệt** (Bugs: Chờ test sau khi merge). MR template ghi `Base: <link bản ghi>` thay cho `Closes #`.
 
-## 4. Khi có câu hỏi: comment lên tài liệu và tạo ticket Decisions
+## 4. Khi quy trình bị vướng: decider quyết trước, không quyết được mới hỏi Bằng
 
-Áp dụng cho mọi câu hỏi decider xếp loại **Nghiệp vụ** hoặc **Rủi ro cao** (câu hỏi Kỹ thuật trong phạm vi thì decider tự quyết, không tạo ticket). Agent chính làm ba việc, theo đúng thứ tự, rồi mới dừng:
+Mọi sự cố trong dây chuyền (câu hỏi mở, thiếu đầu vào, test fail, reviewer chặn, check-mr chặn, pipeline đỏ, conflict…) đi qua `decider` trước. Decider quyết khi có căn cứ và hoàn tác được; agent chính thực thi và ghi vào bảng **Quyết định Claude** để Bằng xem lại, quy trình không dừng. Phần dưới đây áp dụng cho các dòng decider kết luận **HỎI BẰNG**: Người quyết mặc định là Bằng; câu hỏi nghiệp vụ thì Người quyết là BA (PM nếu là phạm vi hoặc hạn), rủi ro cao là Bằng hoặc anh Huy. Bằng luôn nằm trong danh sách theo dõi của ticket. Agent chính làm ba việc, theo đúng thứ tự, rồi mới dừng:
 
 1. **Comment lên đúng chỗ trong đặc tả** bằng `drive-create-comment` trên tài liệu Spec liên kết. Nội dung comment theo mẫu:
    ```
@@ -102,7 +115,7 @@ Token MCP cấp cho Claude là tài khoản bot riêng, quyền tối thiểu:
 | Được | Không được |
 | --- | --- |
 | Đọc Base, đọc tài liệu Docs, đọc file Drive | Xóa bản ghi, xóa file, xóa bảng |
-| Tạo bản ghi trong **Decisions**; cập nhật trường Trạng thái, Nhánh / MR, Ghi chú Claude trong Tasks và Bugs | Sửa trường khác (Hạng mục, Tiêu chí đạt, Hạn, Người phụ trách), tạo bản ghi trong Tasks hay Bugs |
+| Tạo bản ghi trong **Decisions** và **Quyết định Claude**; cập nhật trường Trạng thái, Nhánh / MR, Ghi chú Claude trong Tasks và Bugs | Sửa trường khác (Hạng mục, Tiêu chí đạt, Hạn, Người phụ trách), tạo bản ghi trong Tasks hay Bugs |
 | Tạo comment trên tài liệu đặc tả | Sửa nội dung tài liệu, tạo tài liệu, gửi tin nhắn Lark, tạo sự kiện lịch |
 
 `.claude/settings.json` chặn các tool MCP ghi ngoài danh sách trên; `.mcp.json` khai báo server. Bằng điền URL server và cách xác thực khi cài.
