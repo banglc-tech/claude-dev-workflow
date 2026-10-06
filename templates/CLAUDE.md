@@ -13,6 +13,7 @@
   - Chạy Dev: `<lệnh>`
   - Test: `<lệnh>`
   - Lint / type check: `<lệnh>`
+  - Kiểm tra trước push (ghi cùng lệnh vào `.claude/kiem-tra-truoc-push`, hook tự chạy): `<lệnh>`
 
 ## Quy ước code
 - <đặt tên, cấu trúc module, xử lý lỗi, log, i18n...; repo lớn thì viết docs/CONVENTION-AI.md và trỏ tới đây>

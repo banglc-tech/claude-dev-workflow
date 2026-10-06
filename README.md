@@ -11,7 +11,8 @@ Quy trình giao việc cho Claude Code của team Dev: tính năng mới và s�
 - `.claude/agents/`: planner, test-writer, implementer, bug-investigator, reviewer, decider (model fable)
 - `.claude/commands/`: `/feature <số issue>`, `/bugfix <số issue>`, `/mr-review <số MR>`
 - `scripts/check-mr.sh`: kiểm tra hình thức MR (tên nhánh, tiêu đề, mô tả, nhãn) cho Jenkins
-- `.claude/settings.json`: chặn merge, force push, kubectl, đọc `.env`
+- `.claude/settings.json`: chặn merge, force push, kubectl, đọc `.env`; khai báo hook
+- `.claude/hooks/`: `kiem-soat-git.py` (chặn commit/push sai quy trình, chạy lệnh kiểm tra trước push), `mo-phien.py` (bối cảnh đầu phiên)
 - `.gitlab/merge_request_templates/Default.md`: MR template
 - `DAU-VAO-LARK-BASE.md`: đầu vào từ Lark Base (Tasks, Bugs, Decisions) qua MCP; luồng câu hỏi → comment đặc tả + ticket Decisions
 - `templates/mcp-mau.json`: mẫu khai báo MCP Lark theo project (ưu tiên dùng MCP đã kết nối ở máy dev, xem `CAI-DAT.md`)

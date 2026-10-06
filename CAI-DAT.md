@@ -42,7 +42,8 @@ Script kéo bản mới nhất của bộ quy trình rồi ghi vào repo dự á
 | Ghi vào repo dự án | Cách ghi |
 | --- | --- |
 | `.claude/agents/` (6 agent), `.claude/commands/` (3 lệnh) | Chép đè bằng bản của bộ quy trình |
-| `.claude/settings.json` | Giữ cấu hình sẵn có, thêm các luật chặn còn thiếu |
+| `.claude/settings.json` | Giữ cấu hình sẵn có, thêm các luật chặn và hook còn thiếu |
+| `.claude/hooks/` | Hai hook chạy tự động: `kiem-soat-git.py` chặn commit/push sai quy trình, `mo-phien.py` nạp bối cảnh đầu phiên. Chép đè |
 | `.claude/settings.local.json` (không lên git) | Tìm server MCP Lark đã kết nối trên máy, chặn tool Lark bị cấm và cho phép tool được dùng theo đúng tên server đó. Không ghi `.mcp.json` |
 | `.gitlab/merge_request_templates/Default.md`, `scripts/check-mr.sh` | Chép đè |
 | `docs/claude-workflow/` | Quy trình chung, hướng dẫn dev, quy trình merge, đầu vào Lark Base, file này, 3 lưu đồ |
@@ -64,6 +65,19 @@ Script không commit, không push. Sau khi chạy:
    git push -u origin chore/claude-workflow
    ```
 5. Tech Lead bật trên GitLab: protected branch `dev`, CODEOWNERS cho `.claude/`, `CLAUDE.md`, `docs/claude-workflow/` (xem `QUY-TRINH-MERGE.md`), stage "Kiểm tra MR" trong Jenkins chạy `scripts/check-mr.sh`.
+
+### Hook tự động
+
+Hai hook chạy mà không cần dev hay Claude nhớ gọi:
+
+| Hook | Khi nào | Làm gì |
+| --- | --- | --- |
+| `kiem-soat-git.py` | Trước mỗi lệnh Bash Claude chạy | Chặn: commit trên `dev`/`main`; tiêu đề commit sai mẫu `<loại>(#<Mã>): <mô tả>`; push lên `dev`/`main`, force push, xóa nhánh remote; push nhánh không đúng mẫu `feature/<Mã>-<tên>` hoặc `fix/<Mã>-<tên>`; `git -C`. Nếu repo có file `.claude/kiem-tra-truoc-push` thì chạy lệnh trong đó trước mỗi lần push, lỗi là chặn |
+| `mo-phien.py` | Đầu mỗi phiên Claude Code | Cho Claude biết chế độ (repo hay thư mục chung), nhánh hiện tại, việc đang dở trong `.bangiao/`, quy tắc cốt lõi, và nhắc khi bộ quy trình trên máy có bản mới |
+
+Lệnh kiểm tra trước push đặt riêng cho từng repo, một dòng, ví dụ `pnpm lint && pnpm test --changed`
+(chậm quá 14 phút là bị chặn). File này commit cùng repo để cả team dùng chung.
+Hook chỉ chặn lệnh Claude chạy; lệnh dev tự gõ trong terminal không bị ảnh hưởng.
 
 ## B. Dev mới, repo đã có quy trình
 

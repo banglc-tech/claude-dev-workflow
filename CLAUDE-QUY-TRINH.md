@@ -28,6 +28,9 @@
 - Kế hoạch và sổ bàn giao ghi rõ repo cho từng file sửa. Sổ bàn giao `.bangiao/<Mã>/` để ở thư mục chung.
 - Không sửa repo không có trong bảng repo của CLAUDE.md.
 
+## Hook
+- Hook `kiem-soat-git.py` chặn commit/push sai quy trình. Bị chặn thì đọc lý do và sửa theo (đổi tên nhánh, sửa tiêu đề commit, sửa lỗi lint/test), không tìm cách lách. Không sửa file trong `.claude/hooks/`.
+
 ## Vùng cấm
 - Không sửa (ở mọi thư mục con, không chỉ thư mục gốc): Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo deploy, `.env*`, `.claude/settings.json`, các file trong `docs/claude-workflow/`.
 - Không đọc hay in secret. Không trỏ vào Staging hoặc Production.

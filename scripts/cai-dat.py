@@ -108,14 +108,26 @@ def merge_settings(root, check=False):
     cur = json.loads(read(dst)) if os.path.exists(dst) else {}
     deny = cur.setdefault("permissions", {}).setdefault("deny", [])
     missing = [r for r in kit["permissions"]["deny"] if r not in deny]
-    if not missing:
-        say("giữ", ".claude/settings.json (đủ luật chặn)")
+    # hook: thêm các hook của bộ cài còn thiếu (so theo lệnh), giữ hook riêng của repo
+    hooks = cur.setdefault("hooks", {})
+    have = {h.get("command") for ev in hooks.values() for g in ev for h in g.get("hooks", [])}
+    new_groups = []
+    for ev, groups in kit.get("hooks", {}).items():
+        for g in groups:
+            if any(h.get("command") not in have for h in g.get("hooks", [])):
+                new_groups.append((ev, g))
+    if not missing and not new_groups:
+        say("giữ", ".claude/settings.json (đủ luật chặn và hook)")
     elif check:
-        say("THIẾU", f".claude/settings.json thiếu {len(missing)} luật chặn")
+        say("THIẾU", f".claude/settings.json thiếu {len(missing)} luật chặn, {len(new_groups)} hook")
     else:
         deny.extend(missing)
+        for ev, g in new_groups:
+            hooks.setdefault(ev, []).append(g)
+        if not hooks:
+            cur.pop("hooks")
         write(dst, json.dumps(cur, ensure_ascii=False, indent=2) + "\n")
-        say("cập nhật", f".claude/settings.json (+{len(missing)} luật chặn)")
+        say("cập nhật", f".claude/settings.json (+{len(missing)} luật chặn, +{len(new_groups)} hook)")
 
 
 
@@ -346,6 +358,11 @@ def main():
         for f in sorted(os.listdir(os.path.join(KIT, ".claude", d))):
             if f.endswith(".md"):
                 copy_text(f".claude/{d}/{f}", f".claude/{d}/{f}", root, check=check)
+    for f in sorted(os.listdir(os.path.join(KIT, ".claude", "hooks"))):
+        if f.endswith(".py"):
+            copy_text(f".claude/hooks/{f}", f".claude/hooks/{f}", root, rewrite=False, check=check)
+            if not check:
+                os.chmod(os.path.join(root, ".claude/hooks", f), 0o755)
     merge_settings(root, check)
     setup_lark_mcp(root, check)
     for d in DOCS:

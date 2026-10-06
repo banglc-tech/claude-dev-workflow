@@ -30,6 +30,7 @@
       "Edit(**/docker-compose*)",
       "Edit(**/.claude/settings.json)",
       "Edit(**/docs/claude-workflow/**)",
+      "Edit(**/.claude/hooks/**)",
       "mcp__lark-ihouzz__lark-api-ihouzz-base-v3-delete-record",
       "mcp__lark-ihouzz__lark-api-ihouzz-drive-delete-file",
       "mcp__lark-ihouzz__lark-api-ihouzz-drive-upload-file",
@@ -50,6 +51,30 @@
       "mcp__lark-ihouzz__lark-api-ihouzz-sheets-append-rows",
       "mcp__lark-ihouzz__lark-api-ihouzz-sheets-create-spreadsheet",
       "mcp__lark-ihouzz__lark-api-ihouzz-base-v3-upload-attachment"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/mo-phien.py\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/kiem-soat-git.py\"",
+            "timeout": 900
+          }
+        ]
+      }
     ]
   }
 }
