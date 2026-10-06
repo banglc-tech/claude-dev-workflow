@@ -120,4 +120,4 @@ Token MCP cấp cho Claude là tài khoản bot riêng, quyền tối thiểu:
 | Tạo bản ghi trong **Decisions** và **Quyết định Claude**; cập nhật trường Trạng thái, Nhánh / MR, Ghi chú Claude trong Tasks và Bugs | Sửa trường khác (Hạng mục, Tiêu chí đạt, Hạn, Người phụ trách), tạo bản ghi trong Tasks hay Bugs |
 | Tạo comment trên tài liệu đặc tả | Sửa nội dung tài liệu, tạo tài liệu, gửi tin nhắn Lark, tạo sự kiện lịch |
 
-`.claude/settings.json` chặn các tool MCP ghi ngoài danh sách trên; `.mcp.json` khai báo server. Bằng điền URL server và cách xác thực khi cài.
+`.claude/settings.json` chặn các tool MCP ghi ngoài danh sách trên khi server tên `lark-ihouzz`. Máy dev đã kết nối MCP Lark với tên khác thì `scripts/cai-dat.py` ghi luật chặn và cho phép theo đúng tên đó vào `.claude/settings.local.json`; chạy lại script mỗi khi đổi tên server.

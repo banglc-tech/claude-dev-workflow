@@ -8,6 +8,9 @@ Tùy chọn:
   --khong-pull     không kéo bản mới của bộ cài trước khi chạy
   --ca-repo-con    (thư mục chung) cài thêm MR template, check-mr.sh, .gitignore vào từng repo con
 
+MCP Lark: dùng server đã kết nối sẵn trên máy (tên tùy máy); script áp luật chặn/cho phép theo đúng
+tên đó vào .claude/settings.local.json. Không ghi .mcp.json.
+
 Đường dẫn mặc định là thư mục hiện tại.
   - Là repo git (hoặc nằm trong repo git): cài vào gốc repo đó (chế độ repo).
   - Không phải git: cài vào chính thư mục đó, dùng chung cho mọi repo con bên trong (chế độ thư mục chung).
@@ -115,23 +118,6 @@ def merge_settings(root, check=False):
         say("cập nhật", f".claude/settings.json (+{len(missing)} luật chặn)")
 
 
-def merge_mcp(root, check=False):
-    kit = json.loads(read(os.path.join(KIT, ".mcp.json")))
-    dst = os.path.join(root, ".mcp.json")
-    cur = json.loads(read(dst)) if os.path.exists(dst) else {}
-    servers = cur.setdefault("mcpServers", {})
-    if "lark-ihouzz" in servers:
-        if servers["lark-ihouzz"].get("url", "").startswith("<"):
-            say("CẦN ĐIỀN", ".mcp.json: URL MCP Lark còn là chỗ trống, hỏi Tech Lead")
-        else:
-            say("giữ", ".mcp.json (đã có lark-ihouzz)")
-    elif check:
-        say("THIẾU", ".mcp.json chưa khai báo lark-ihouzz")
-    else:
-        servers["lark-ihouzz"] = kit["mcpServers"]["lark-ihouzz"]
-        write(dst, json.dumps(cur, ensure_ascii=False, indent=2) + "\n")
-        say("cập nhật", ".mcp.json (+ lark-ihouzz)")
-
 
 def repo_table(root, repos):
     lines = ["| Repo | Đường dẫn | Vai trò | Lệnh test |", "| --- | --- | --- | --- |"]
@@ -223,6 +209,93 @@ def repo_level_files(repo, root, check):
     ensure_gitignore(repo, check, label_base=root)
 
 
+LARK_HINTS = ("lark", "ihouzz")
+# Tool Lark được dùng không cần hỏi (đọc + 3 việc ghi được phép theo DAU-VAO-LARK-BASE.md mục 6)
+LARK_ALLOW = [
+    "base-v3-list-tables", "base-v3-list-records", "base-v3-get-record",
+    "docx-get-raw-content", "docx-get-document", "docx-list-blocks",
+    "drive-get-file-meta", "drive-list-comments", "drive-list-files",
+    "sheets-get-spreadsheet", "sheets-list-sheets", "sheets-read-range", "contact-search-user",
+    "base-v3-create-record", "base-v3-update-record", "drive-create-comment", "drive-reply-comment",
+]
+
+
+def tool_prefix(server_name):
+    """Tên server MCP -> tiền tố tool trong Claude Code (ký tự lạ thành _)."""
+    return "mcp__" + re.sub(r"[^A-Za-z0-9_-]", "_", server_name) + "__lark-api-ihouzz-"
+
+
+def find_lark_servers(root):
+    """Tìm server MCP Lark đã kết nối sẵn trên máy dev (tên server mỗi máy có thể khác)."""
+    names = set()
+    cfg = os.path.expanduser("~/.claude.json")
+    if os.path.exists(cfg):
+        try:
+            data = json.loads(read(cfg))
+            pools = [data.get("mcpServers", {})]
+            for path, proj in (data.get("projects") or {}).items():
+                if os.path.abspath(path) in (root, os.path.dirname(root)) or root.startswith(os.path.abspath(path) + os.sep):
+                    pools.append(proj.get("mcpServers", {}))
+            for pool in pools:
+                for name, spec in pool.items():
+                    blob = (name + " " + json.dumps(spec)).lower()
+                    if any(h in blob for h in LARK_HINTS):
+                        names.add(name)
+        except (ValueError, OSError):
+            pass
+    if shutil.which("claude"):
+        try:
+            r = subprocess.run(["claude", "mcp", "list"], cwd=root, capture_output=True, text=True, timeout=90)
+            for line in r.stdout.splitlines():
+                m = re.match(r"^(.+?): (\S+).* - (.+)$", line.strip())
+                if m and any(h in (m.group(1) + m.group(2)).lower() for h in LARK_HINTS):
+                    names.add(m.group(1).strip())
+        except (subprocess.TimeoutExpired, OSError):
+            pass
+    return sorted(names)
+
+
+def setup_lark_mcp(root, check=False):
+    """Dùng MCP Lark đã có trên máy; áp luật chặn/cho phép theo đúng tên server của máy này
+    vào .claude/settings.local.json (không lên git, mỗi máy một bản)."""
+    kit_deny = json.loads(read(os.path.join(KIT, ".claude/settings.json")))["permissions"]["deny"]
+    blocked = sorted({r.split("__lark-api-ihouzz-", 1)[1] for r in kit_deny if "__lark-api-ihouzz-" in r})
+    servers = find_lark_servers(root)
+    if not servers:
+        say("THIẾU", "MCP Lark trên máy: chưa thấy server nào. Thêm một lần cho mọi repo: "
+            "claude mcp add --transport http --scope user lark-ihouzz <URL> "
+            "--header \"Authorization: Bearer <token>\" (URL và token xin Tech Lead)")
+        return
+    say("có", "MCP Lark trên máy: " + ", ".join(servers))
+    dst = os.path.join(root, ".claude/settings.local.json")
+    cur = json.loads(read(dst)) if os.path.exists(dst) else {}
+    perms = cur.setdefault("permissions", {})
+    deny, allow = perms.setdefault("deny", []), perms.setdefault("allow", [])
+    want_deny = [tool_prefix(s) + t for s in servers for t in blocked]
+    want_allow = [tool_prefix(s) + t for s in servers for t in LARK_ALLOW]
+    add_d = [r for r in want_deny if r not in deny]
+    add_a = [r for r in want_allow if r not in allow]
+    # Repo còn khai báo lark-ihouzz trong .mcp.json (bản cài cũ): tắt để khỏi trùng với server trên máy
+    disable = []
+    mcpf = os.path.join(root, ".mcp.json")
+    if os.path.exists(mcpf) and "lark-ihouzz" in json.loads(read(mcpf)).get("mcpServers", {}) \
+            and "lark-ihouzz" not in servers:
+        if "lark-ihouzz" not in cur.get("disabledMcpjsonServers", []):
+            disable = ["lark-ihouzz"]
+    if not (add_d or add_a or disable):
+        say("giữ", ".claude/settings.local.json (luật Lark theo tên server máy này)")
+    elif check:
+        say("THIẾU", f".claude/settings.local.json thiếu {len(add_d)} luật chặn, {len(add_a)} luật cho phép Lark")
+    else:
+        deny.extend(add_d)
+        allow.extend(add_a)
+        if disable:
+            cur.setdefault("disabledMcpjsonServers", []).extend(disable)
+        write(dst, json.dumps(cur, ensure_ascii=False, indent=2) + "\n")
+        say("cập nhật", f".claude/settings.local.json (+{len(add_d)} chặn, +{len(add_a)} cho phép Lark"
+            + (", tắt lark-ihouzz trong .mcp.json" if disable else "") + ")")
+
+
 def check_machine():
     print("\nMáy của bạn:")
     for tool, hint in [("claude", "cài Claude Code"), ("glab", "brew install glab, rồi glab auth login"),
@@ -232,10 +305,6 @@ def check_machine():
         r = subprocess.run(["glab", "auth", "status"], capture_output=True, text=True)
         say("có" if r.returncode == 0 else "THIẾU",
             "glab đã đăng nhập GitLab" if r.returncode == 0 else "glab chưa đăng nhập: glab auth login")
-    if os.environ.get("LARK_MCP_TOKEN"):
-        say("có", "biến LARK_MCP_TOKEN")
-    else:
-        say("THIẾU", "biến LARK_MCP_TOKEN: thêm export LARK_MCP_TOKEN=... vào ~/.zshrc (token xin Tech Lead)")
 
 
 def main():
@@ -278,7 +347,7 @@ def main():
             if f.endswith(".md"):
                 copy_text(f".claude/{d}/{f}", f".claude/{d}/{f}", root, check=check)
     merge_settings(root, check)
-    merge_mcp(root, check)
+    setup_lark_mcp(root, check)
     for d in DOCS:
         copy_text(d, f"{DOCS_DIR}/{d}", root, check=check)
     for img in IMAGES:
@@ -318,7 +387,7 @@ def main():
         print("Xong. Việc tiếp theo:\n"
               "  1. git status && git diff  — xem lại thay đổi\n"
               "  2. Điền các chỗ <...> trong CLAUDE.md (stack, lệnh test, quy ước code)\n"
-              "  3. Mở Claude Code trong repo, gõ /agents (thấy 6 agent) và /mcp (lark-ihouzz connected)\n"
+              "  3. Mở Claude Code trong repo, gõ /agents (thấy 6 agent) và /mcp (MCP Lark connected)\n"
               "  4. Commit trên nhánh riêng, mở MR mức Hạ tầng cho Tech Lead duyệt")
     sys.exit(1 if (check and problems) else 0)
 

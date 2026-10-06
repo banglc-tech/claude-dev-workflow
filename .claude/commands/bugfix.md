@@ -5,7 +5,7 @@ argument-hint: <số issue>
 
 Sửa lỗi #$ARGUMENTS theo đúng thứ tự dưới đây. Bạn là agent chính: điều phối các sub agent và là nơi duy nhất thao tác git.
 
-1. Đọc lỗi có **Mã = $ARGUMENTS** trong bảng Bugs của Base `BLUEMARQ` qua MCP `lark-ihouzz` (xem `DAU-VAO-LARK-BASE.md`). Kiểm tra đủ: Bước tái hiện, Kết quả mong đợi, Kết quả thực tế, Tiêu chí bị vi phạm, Mức độ. Đọc đặc tả của Task liên kết bằng `docx-get-raw-content`. Thiếu gì thì gọi `decider` (sự cố: thiếu đầu vào) trước khi dừng. Đủ thì đổi Trạng thái sang Đang sửa.
+1. Đọc lỗi có **Mã = $ARGUMENTS** trong bảng Bugs của Base `BLUEMARQ` qua MCP Lark của iHouzz (các tool `lark-api-ihouzz-*`; tên server tùy máy dev, ví dụ `iHouzz_mcp` hay `lark-ihouzz`) (xem `DAU-VAO-LARK-BASE.md`). Kiểm tra đủ: Bước tái hiện, Kết quả mong đợi, Kết quả thực tế, Tiêu chí bị vi phạm, Mức độ. Đọc đặc tả của Task liên kết bằng `docx-get-raw-content`. Thiếu gì thì gọi `decider` (sự cố: thiếu đầu vào) trước khi dừng. Đủ thì đổi Trạng thái sang Đang sửa.
 2. Mức độ Nghiêm trọng: báo dev, chỉ làm khi dev đang theo dõi trực tiếp.
 3. Đang ở thư mục chung nhiều repo (không phải repo git): xác định repo theo trường Repo, làm theo mục "Khi mở Claude Code ở thư mục chung nhiều repo" trong CLAUDE-QUY-TRINH.md. Tạo nhánh `fix/$ARGUMENTS-<tên ngắn>` từ `dev` mới nhất trong (từng) repo đó. Môi trường = Production thì DỪNG và nhắc dev làm theo mục hotfix trong tài liệu Quy trình quản lý source Git & deploy.
 4. Gọi sub agent `bug-investigator`. Trình nguyên nhân gốc và cách sửa cho dev rồi DỪNG, chờ dev duyệt.

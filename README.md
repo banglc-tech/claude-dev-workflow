@@ -14,7 +14,7 @@ Quy trình giao việc cho Claude Code của team Dev: tính năng mới và s�
 - `.claude/settings.json`: chặn merge, force push, kubectl, đọc `.env`
 - `.gitlab/merge_request_templates/Default.md`: MR template
 - `DAU-VAO-LARK-BASE.md`: đầu vào từ Lark Base (Tasks, Bugs, Decisions) qua MCP; luồng câu hỏi → comment đặc tả + ticket Decisions
-- `.mcp.json`: khai báo MCP Lark của iHouzz
+- `templates/mcp-mau.json`: mẫu khai báo MCP Lark theo project (ưu tiên dùng MCP đã kết nối ở máy dev, xem `CAI-DAT.md`)
 - `QUY-TRINH-MERGE.md`: quy trình duyệt và merge vào `dev` (3 mức MR, điều kiện merge, cài đặt GitLab)
 
 ## Cài vào repo dự án

@@ -5,7 +5,7 @@
 > Phần riêng của từng repo (stack, lệnh, quy ước code) nằm trong CLAUDE.md của repo đó.
 
 ## Đầu vào
-- Task, lỗi, câu hỏi và trạng thái nằm trên Lark Base `BLUEMARQ` (bảng Tasks, Bugs, Decisions); đặc tả là Lark Docs link từ task. Đọc qua MCP `lark-ihouzz`, theo `DAU-VAO-LARK-BASE.md`. Không nhận yêu cầu qua chat.
+- Task, lỗi, câu hỏi và trạng thái nằm trên Lark Base `BLUEMARQ` (bảng Tasks, Bugs, Decisions); đặc tả là Lark Docs link từ task. Đọc qua MCP Lark đã kết nối trên máy (các tool `lark-api-ihouzz-*`, tên server tùy máy), theo `DAU-VAO-LARK-BASE.md`. Không nhận yêu cầu qua chat.
 - Có câu hỏi nghiệp vụ hoặc rủi ro cao: comment lên đặc tả + tạo ticket Decisions + ghi Ghi chú Claude, rồi dừng. Không đoán.
 - Trên Lark chỉ được: tạo bản ghi Decisions, cập nhật Trạng thái / Nhánh / MR / Ghi chú Claude, tạo comment. Không xóa, không sửa tài liệu, không gửi tin nhắn.
 

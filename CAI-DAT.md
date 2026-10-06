@@ -18,11 +18,11 @@ Có ba tình huống. Tìm đúng tình huống của bạn rồi làm theo.
 
 1. Cài Claude Code, `git`, `glab` (`brew install glab`) và Python 3 (macOS có sẵn khi cài Xcode Command Line Tools).
 2. Đăng nhập GitLab: `glab auth login`.
-3. Xin Tech Lead token MCP Lark, thêm vào `~/.zshrc` rồi mở lại terminal:
+3. MCP Lark của iHouzz: máy đã kết nối sẵn (gõ `/mcp` trong Claude Code thấy server Lark connected, tên gì cũng được) thì không cần làm gì thêm. Chưa có thì thêm một lần, dùng cho mọi repo:
    ```bash
-   export LARK_MCP_TOKEN="<token>"
+   claude mcp add --transport http --scope user lark-ihouzz <URL> --header "Authorization: Bearer <token>"
    ```
-   Không dán token vào chat, vào file trong repo hay vào Claude.
+   URL và token xin Tech Lead. Không dán token vào chat, vào file trong repo hay vào Claude.
 4. Lấy bộ quy trình về máy, để cố định ở thư mục home:
    ```bash
    git clone git@github.com:banglc-tech/claude-dev-workflow.git ~/claude-dev-workflow
@@ -43,7 +43,7 @@ Script kéo bản mới nhất của bộ quy trình rồi ghi vào repo dự á
 | --- | --- |
 | `.claude/agents/` (6 agent), `.claude/commands/` (3 lệnh) | Chép đè bằng bản của bộ quy trình |
 | `.claude/settings.json` | Giữ cấu hình sẵn có, thêm các luật chặn còn thiếu |
-| `.mcp.json` | Giữ server sẵn có, thêm `lark-ihouzz` nếu chưa có |
+| `.claude/settings.local.json` (không lên git) | Tìm server MCP Lark đã kết nối trên máy, chặn tool Lark bị cấm và cho phép tool được dùng theo đúng tên server đó. Không ghi `.mcp.json` |
 | `.gitlab/merge_request_templates/Default.md`, `scripts/check-mr.sh` | Chép đè |
 | `docs/claude-workflow/` | Quy trình chung, hướng dẫn dev, quy trình merge, đầu vào Lark Base, file này, 3 lưu đồ |
 | `CLAUDE.md` | Chưa có: tạo từ mẫu. Đã có: giữ nguyên, chỉ thêm dòng `@docs/claude-workflow/CLAUDE-QUY-TRINH.md` ở cuối |
@@ -56,7 +56,7 @@ Script không commit, không push. Sau khi chạy:
 2. Điền các chỗ `<...>` trong `CLAUDE.md`: stack, lệnh cài, chạy, test, lint, quy ước code, công cụ mock. Repo lớn thì viết thêm `docs/CONVENTION-AI.md` và trỏ tới từ `CLAUDE.md`. Chỉ ghi phần riêng của repo, không chép lại quy trình chung.
 3. Thử trong Claude Code tại thư mục gốc repo:
    - `/agents` thấy đủ planner, test-writer, implementer, bug-investigator, reviewer, decider.
-   - `/mcp` thấy `lark-ihouzz` ở trạng thái connected.
+   - `/mcp` thấy server MCP Lark ở trạng thái connected.
    - Gõ `/` thấy `/feature`, `/bugfix`, `/mr-review`.
 4. Commit và mở MR mức Hạ tầng cho Tech Lead duyệt:
    ```bash
@@ -110,7 +110,7 @@ Script nhận ra thư mục không phải git và chuyển sang chế độ thư
 
 | Ghi vào | Nội dung |
 | --- | --- |
-| Thư mục chung | `.claude/` (agent, lệnh, luật chặn), `.mcp.json`, `docs/claude-workflow/`, `CLAUDE.md` |
+| Thư mục chung | `.claude/` (agent, lệnh, luật chặn, `settings.local.json` theo MCP Lark của máy), `docs/claude-workflow/`, `CLAUDE.md` |
 | `CLAUDE.md` của thư mục chung | Tạo từ mẫu thư mục chung, có sẵn bảng các repo con tìm được (sâu tối đa 2 cấp); bạn điền vai trò và lệnh test từng repo |
 | Từng repo con (chỉ khi có `--ca-repo-con`) | MR template, `scripts/check-mr.sh`, dòng `.bangiao/` trong `.gitignore` |
 
@@ -138,7 +138,9 @@ Sửa thẳng file trong `docs/claude-workflow/` hoặc `.claude/agents/` của 
 
 | Hiện tượng | Cách xử lý |
 | --- | --- |
-| `/mcp` báo `lark-ihouzz` failed | Kiểm tra `echo $LARK_MCP_TOKEN` có giá trị; mở lại terminal rồi mở lại Claude Code. URL trong `.mcp.json` còn `<...>` thì hỏi Tech Lead |
+| `/mcp` báo server Lark failed | Token hết hạn hoặc sai: xin lại Tech Lead, chạy lại `claude mcp add` (xóa bản cũ bằng `claude mcp remove <tên>`) |
+| Script báo chưa thấy MCP Lark dù `/mcp` có | Tên và URL server không chứa chữ lark hay ihouzz: báo Tech Lead tên server để thêm vào script |
+| Đổi tên server MCP Lark | Chạy lại script để cập nhật luật chặn theo tên mới; luật theo tên cũ không còn tác dụng |
 | `/agents` không thấy agent | Phải mở Claude Code ở thư mục gốc repo (nơi có `.claude/`) |
 | Agent decider báo không nhận model fable | Đổi `model: fable` thành `model: opus` trong bộ quy trình, báo Tech Lead |
 | Script chạy chế độ thư mục chung trong khi bạn muốn cài cho một repo | Bạn đang đứng ngoài repo: `cd` vào repo hoặc truyền đúng đường dẫn repo |
