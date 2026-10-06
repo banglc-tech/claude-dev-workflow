@@ -6,7 +6,7 @@
 ## 1. Chuẩn bị một lần
 
 1. Cài Claude Code và `glab`, đăng nhập GitLab: `glab auth login`.
-2. Trong repo dự án đã có sẵn `CLAUDE.md`, `.claude/`, `.gitlab/`. Nếu chưa có thì chép toàn bộ từ repo này sang và điền các chỗ `<...>` trong `CLAUDE.md` (stack, lệnh test, lint, quy ước code).
+2. Lấy bộ quy trình về máy (`git clone git@github.com:banglc-tech/claude-dev-workflow.git ~/claude-dev-workflow`), đặt `LARK_MCP_TOKEN` trong `~/.zshrc`, rồi trong repo dự án chạy `python3 ~/claude-dev-workflow/scripts/cai-dat.py --kiem-tra`. Repo dự án chưa có quy trình thì làm theo `CAI-DAT.md` mục A. Chi tiết: `CAI-DAT.md`.
 3. Không sửa `.claude/settings.json`. File này chặn Claude merge, force push, chạy `kubectl`, đọc `.env`. Cần nới gì thì nói với Bằng.
 4. Cài đặt riêng của bạn (nếu cần) để trong `.claude/settings.local.json`, file này đã nằm trong `.gitignore`.
 

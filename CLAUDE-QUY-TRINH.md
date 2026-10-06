@@ -1,0 +1,32 @@
+# Quy trình làm việc với Claude (dùng chung mọi repo)
+
+> File này do bộ claude-dev-workflow quản lý và được nạp từ CLAUDE.md của repo dự án.
+> Không sửa trực tiếp trong repo dự án: sửa ở repo claude-dev-workflow rồi chạy lại `scripts/cai-dat.py`.
+> Phần riêng của từng repo (stack, lệnh, quy ước code) nằm trong CLAUDE.md của repo đó.
+
+## Đầu vào
+- Task, lỗi, câu hỏi và trạng thái nằm trên Lark Base `BLUEMARQ` (bảng Tasks, Bugs, Decisions); đặc tả là Lark Docs link từ task. Đọc qua MCP `lark-ihouzz`, theo `DAU-VAO-LARK-BASE.md`. Không nhận yêu cầu qua chat.
+- Có câu hỏi nghiệp vụ hoặc rủi ro cao: comment lên đặc tả + tạo ticket Decisions + ghi Ghi chú Claude, rồi dừng. Không đoán.
+- Trên Lark chỉ được: tạo bản ghi Decisions, cập nhật Trạng thái / Nhánh / MR / Ghi chú Claude, tạo comment. Không xóa, không sửa tài liệu, không gửi tin nhắn.
+
+## Quy trình bắt buộc
+- Tính năng: `/feature <Mã task>`. Lỗi: `/bugfix <Mã lỗi>`. Mã lấy từ trường Mã trên Base.
+- Quy trình bị vướng ở đâu (câu hỏi mở, thiếu đầu vào, test fail 3 lần, reviewer chặn, check-mr chặn, pipeline đỏ, conflict): gọi `decider` (model fable) trước, không dừng ngay. decider quyết khi có căn cứ và hoàn tác được, ghi vào bảng Quyết định Claude để Tech Lead xem; không quyết được mới tạo ticket Decisions hỏi Tech Lead (nghiệp vụ: BA).
+- Lập kế hoạch trước, code sau. Dừng lại chờ dev duyệt kế hoạch hoặc nguyên nhân gốc.
+- Nhánh: `feature/<số issue>-<tên ngắn>` hoặc `fix/<số issue>-<tên ngắn>`, tạo từ `dev`.
+- Commit: `<loại>(#<Mã>): <mô tả>`, ví dụ `feat(#123): giữ chỗ căn hộ`; commit dở dùng `wip(#<Mã>): …`.
+- Push nhánh feature/fix lên GitLab sau mỗi bước có commit và trước khi kết thúc lượt chạy; mỗi nhánh phải có push ít nhất một lần mỗi ngày trước 17:00.
+- MR: tiêu đề `[<tính năng>] <việc> (#<số issue>)`, nhãn `feature::<tính năng>` hoặc `bug`, dùng MR template.
+- Review MR: `/mr-review <số MR>`. Chỉ kết luận QUA khi mọi vấn đề ở mức Gợi ý; không approve, không merge.
+- Chỉ con người được merge, theo `QUY-TRINH-MERGE.md`: squash merge, người duyệt bấm merge, MR mức Rủi ro cao cần Tech Lead. Claude không push lên `dev`, không merge.
+
+## Vùng cấm
+- Không sửa: Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo deploy, `.env*`, `.claude/settings.json`, các file trong `docs/claude-workflow/`.
+- Không đọc hay in secret. Không trỏ vào Staging hoặc Production.
+- Không thêm thư viện nếu kế hoạch đã duyệt chưa ghi.
+- Migration: chỉ khi kế hoạch có ghi, phải chạy ngược lại được, chỉ chạy trên Dev.
+
+## Test
+- Mỗi tiêu chí đạt có ít nhất một test, tên test ghi mã tiêu chí (`TC2: ...`).
+- Không gọi dịch vụ thật trong test; mock theo công cụ ghi trong CLAUDE.md của repo.
+- Không xóa, skip hay nới lỏng test có sẵn để cho pass.
