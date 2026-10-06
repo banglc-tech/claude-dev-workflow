@@ -10,7 +10,7 @@ Người mở MR tự xếp mức ngay khi mở, ghi vào mục "Mức" của MR
 | Mức | Khi nào | Ai duyệt | Số người duyệt |
 | --- | --- | --- | --- |
 | **Thường** | Tính năng hoặc lỗi trong phạm vi một module, không đổi schema, không thêm thư viện, không đụng phân quyền hay thanh toán | Một dev khác trong team (theo lịch xoay vòng) | 1 |
-| **Rủi ro cao** | Có migration hoặc đổi schema; thêm hoặc nâng thư viện; đụng phân quyền, đăng nhập, thanh toán, dữ liệu khách hàng; sửa API dùng chung; thay đổi cấu trúc thư mục | Bằng hoặc anh Huy, **cộng thêm** một dev khác | 2 |
+| **Rủi ro cao** | Có migration hoặc đổi schema; thêm hoặc nâng thư viện; đụng phân quyền, đăng nhập, thanh toán, dữ liệu khách hàng; sửa API dùng chung; thay đổi cấu trúc thư mục | Tech Lead, **cộng thêm** một dev khác | 2 |
 | **Hạ tầng** | Jenkinsfile, Dockerfile, docker-compose, cấu hình Kubernetes, `.claude/settings.json`, `CLAUDE.md` | Bằng | 1 (Bằng) |
 
 MR mức Hạ tầng không được do Claude tạo; dev tự làm bằng tay.
@@ -47,7 +47,7 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 ## 4. Cách merge
 
 - **Squash merge**, một commit cho một MR. Tiêu đề commit lấy từ tiêu đề MR: `[<tính năng>] <việc> (#<số issue>)`. Nội dung commit gồm dòng `Closes #<số issue>`.
-- **Người duyệt cuối cùng là người bấm merge**, không phải người mở MR. Với mức Rủi ro cao, Bằng hoặc anh Huy bấm.
+- **Người duyệt cuối cùng là người bấm merge**, không phải người mở MR. Với mức Rủi ro cao, Tech Lead bấm.
 - Merge xong: xóa nhánh nguồn (GitLab tự làm), chuyển issue sang **Ready for test**, dán link MR vào dòng việc trên Lark Base và đổi trạng thái sang "Chờ test".
 - Không merge sau **17:00 thứ Sáu** trừ lỗi mức Nghiêm trọng, để không ai phải sửa `dev` cuối tuần.
 - Không bao giờ push thẳng lên `dev`, không force push, không "merge tạm để test". Muốn test chung thì Test kéo nhánh feature về chạy.
@@ -78,7 +78,7 @@ Bằng cài một lần trong Settings → Repository → Protected branches và
 | Protected branch `dev` | Allowed to push: **No one**. Allowed to merge: **Maintainers** |
 | Protected branch `main` | Allowed to push: No one. Allowed to merge: Bằng |
 | Force push | Tắt trên `dev` và `main` |
-| Merge request approvals | Tối thiểu **1**; rule riêng cho mức Rủi ro cao: **2**, trong đó bắt buộc có Bằng hoặc anh Huy (dùng Code Owners cho các thư mục nhạy cảm) |
+| Merge request approvals | Tối thiểu **1**; rule riêng cho mức Rủi ro cao: **2**, trong đó bắt buộc có Tech Lead (dùng Code Owners cho các thư mục nhạy cảm) |
 | Prevent approval by author | Bật |
 | Remove all approvals when commits are added | Bật |
 | Pipelines must succeed | Bật |
@@ -87,13 +87,13 @@ Bằng cài một lần trong Settings → Repository → Protected branches và
 | Delete source branch | Mặc định bật |
 | Token GitLab cấp cho Claude hoặc Paperclip | Vai trò **Developer**, không có quyền merge vào nhánh protected |
 
-File `CODEOWNERS` (đặt tại gốc repo) để GitLab tự yêu cầu Bằng hoặc anh Huy duyệt khi MR đụng thư mục nhạy cảm:
+File `CODEOWNERS` (đặt tại gốc repo) để GitLab tự yêu cầu Tech Lead duyệt khi MR đụng thư mục nhạy cảm:
 
 ```
-# Thư mục nhạy cảm: bắt buộc Tech Lead hoặc GĐ duyệt
-/migrations/        @banglc @huy
-/src/auth/          @banglc @huy
-/src/payment/       @banglc @huy
+# Thư mục nhạy cảm: bắt buộc Tech Lead duyệt (nhóm GitLab @tech-lead)
+/migrations/        @tech-lead
+/src/auth/          @tech-lead
+/src/payment/       @tech-lead
 Jenkinsfile         @banglc
 Dockerfile          @banglc
 docker-compose*     @banglc

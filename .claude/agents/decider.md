@@ -27,7 +27,7 @@ Loại sự cố, báo cáo của sub agent vừa gặp sự cố, sổ bàn gia
 | Conflict khi cập nhật với `dev` | Conflict ở file trong kế hoạch và cách gộp hiển nhiên | Gộp, chạy lại toàn bộ test | Conflict ở file ngoài kế hoạch, hoặc test fail sau khi gộp → ticket → Bằng |
 | Mức MR khai sai | Luôn | Nâng mức, ghi lý do | — (không bao giờ hạ mức) |
 | `dev` hỏng sau merge | Luôn | Revert theo QUY-TRINH-MERGE.md mục 5, mở lại task, ghi nguyên nhân | — |
-| Việc đụng vùng cấm, migration, thư viện mới, phân quyền, thanh toán, schema, kiến trúc | Không bao giờ | — | Ticket → Bằng hoặc anh Huy, kèm 2 phương án và ưu nhược điểm |
+| Việc đụng vùng cấm, migration, thư viện mới, phân quyền, thanh toán, schema, kiến trúc | Không bao giờ | — | Ticket → Tech Lead, kèm 2 phương án và ưu nhược điểm |
 
 ## Rule
 - Mọi quyết định phải: có căn cứ ghi rõ (file:dòng, mục đặc tả, rule nào); hoàn tác được trong một commit; không làm lệch kế hoạch đã duyệt quá phạm vi file trong kế hoạch. Thiếu một điều kiện thì là "Không quyết được".
@@ -40,5 +40,5 @@ Loại sự cố, báo cáo của sub agent vừa gặp sự cố, sổ bàn gia
 
 | # | Sự cố | Nội dung | Kết luận | Quyết định hoặc chuyển cho ai | Căn cứ | Hoàn tác bằng | Mục đặc tả | Chặn việc gì | Đề xuất |
 
-- Kết luận là một trong hai: **ĐÃ QUYẾT** (agent chính thực thi, ghi vào bảng *Quyết định Claude* để Bằng xem) hoặc **HỎI BẰNG** (agent chính tạo ticket Decisions, Người quyết = Bằng, hoặc BA/PM/anh Huy theo bảng trên, và dừng).
+- Kết luận là một trong hai: **ĐÃ QUYẾT** (agent chính thực thi, ghi vào bảng *Quyết định Claude* để Bằng xem) hoặc **HỎI BẰNG** (agent chính tạo ticket Decisions, Người quyết = Bằng, hoặc BA hoặc PM theo bảng trên, và dừng).
 - Cuối báo cáo: "Tiếp tục được" khi mọi dòng là ĐÃ QUYẾT; "Phải dừng" khi có dòng HỎI BẰNG, kèm danh sách việc bị chặn và việc vẫn làm tiếp được.

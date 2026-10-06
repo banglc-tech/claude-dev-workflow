@@ -27,7 +27,7 @@
 - Push nhánh feature/fix lên GitLab sau mỗi bước có commit và trước khi kết thúc lượt chạy; mỗi nhánh phải có push ít nhất một lần mỗi ngày trước 17:00.
 - MR: tiêu đề `[<tính năng>] <việc> (#<số issue>)`, nhãn `feature::<tính năng>` hoặc `bug`, dùng MR template.
 - Review MR: `/mr-review <số MR>`. Chỉ kết luận QUA khi mọi vấn đề ở mức Gợi ý; không approve, không merge.
-- Chỉ con người được merge, theo `QUY-TRINH-MERGE.md`: squash merge, người duyệt bấm merge, MR mức Rủi ro cao cần Bằng hoặc anh Huy. Claude không push lên `dev`, không merge.
+- Chỉ con người được merge, theo `QUY-TRINH-MERGE.md`: squash merge, người duyệt bấm merge, MR mức Rủi ro cao cần Tech Lead. Claude không push lên `dev`, không merge.
 
 ## Vùng cấm
 - Không sửa: Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo `bluemarq-deploy`, `.env*`.

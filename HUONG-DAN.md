@@ -105,7 +105,7 @@ Sub agent nào có câu hỏi thì Claude gọi `decider` trước khi dừng. d
 | --- | --- | --- |
 | Kỹ thuật, trong phạm vi | đặt tên, chọn component có sẵn, cấu trúc file, cách viết test | decider tự quyết, ghi vào `00-quyet-dinh.md`, làm tiếp |
 | Nghiệp vụ, phạm vi | luồng nghiệp vụ, quy tắc tính, quyền người dùng, nội dung hiển thị | BA (phạm vi, hạn thì PM) |
-| Rủi ro cao | kiến trúc, schema DB, migration, thư viện mới, bảo mật, thanh toán | Bằng hoặc anh Huy |
+| Rủi ro cao | kiến trúc, schema DB, migration, thư viện mới, bảo mật, thanh toán | Tech Lead |
 
 Khi Claude báo "Phải dừng": chuyển câu hỏi cho đúng người, có câu trả lời thì dán lại cho Claude và nói làm tiếp.
 

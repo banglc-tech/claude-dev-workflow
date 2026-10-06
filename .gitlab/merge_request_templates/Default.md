@@ -7,7 +7,7 @@ Base: <link bản ghi trên BLUEMARQ-ONE>  (Mã #<Mã>)
 ## Mức
 <!-- Chọn một, xem QUY-TRINH-MERGE.md mục 1 -->
 - [ ] Thường (1 người duyệt)
-- [ ] Rủi ro cao (Bằng hoặc anh Huy + 1 dev)
+- [ ] Rủi ro cao (Tech Lead + 1 dev)
 - [ ] Hạ tầng (Bằng)
 
 ## Đã làm

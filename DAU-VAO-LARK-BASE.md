@@ -1,7 +1,7 @@
 # Đầu vào của Dev: đặc tả, task, lỗi và câu hỏi nằm trên Lark Base
 
 > Ngoài source code trên GitLab, mọi đầu vào của Dev nằm ở **một Base duy nhất**: `BLUEMARQ-ONE` (Lark Drive › BLUEMARQ ONE). Claude đọc Base và tài liệu qua **MCP Lark của iHouzz**, không đọc qua link dán tay hay nội dung copy vào chat.
-> Chủ sở hữu quy định: Bằng. Chủ sở hữu dữ liệu trên Base: PM (anh Huy) và BA.
+> Chủ sở hữu quy định: Bằng. Chủ sở hữu dữ liệu trên Base: PM và BA.
 
 ## 1. Nguồn dữ liệu
 
@@ -89,7 +89,7 @@ Khi mở MR: điền link MR vào **Nhánh / MR**, đổi Trạng thái sang **C
 
 ## 4. Khi quy trình bị vướng: decider quyết trước, không quyết được mới hỏi Bằng
 
-Mọi sự cố trong dây chuyền (câu hỏi mở, thiếu đầu vào, test fail, reviewer chặn, check-mr chặn, pipeline đỏ, conflict…) đi qua `decider` trước. Decider quyết khi có căn cứ và hoàn tác được; agent chính thực thi và ghi vào bảng **Quyết định Claude** để Bằng xem lại, quy trình không dừng. Phần dưới đây áp dụng cho các dòng decider kết luận **HỎI BẰNG**: Người quyết mặc định là Bằng; câu hỏi nghiệp vụ thì Người quyết là BA (PM nếu là phạm vi hoặc hạn), rủi ro cao là Bằng hoặc anh Huy. Bằng luôn nằm trong danh sách theo dõi của ticket. Agent chính làm ba việc, theo đúng thứ tự, rồi mới dừng:
+Mọi sự cố trong dây chuyền (câu hỏi mở, thiếu đầu vào, test fail, reviewer chặn, check-mr chặn, pipeline đỏ, conflict…) đi qua `decider` trước. Decider quyết khi có căn cứ và hoàn tác được; agent chính thực thi và ghi vào bảng **Quyết định Claude** để Bằng xem lại, quy trình không dừng. Phần dưới đây áp dụng cho các dòng decider kết luận **HỎI BẰNG**: Người quyết mặc định là Bằng; câu hỏi nghiệp vụ thì Người quyết là BA (PM nếu là phạm vi hoặc hạn), rủi ro cao là Tech Lead. Bằng luôn nằm trong danh sách theo dõi của ticket. Agent chính làm ba việc, theo đúng thứ tự, rồi mới dừng:
 
 1. **Comment lên đúng chỗ trong đặc tả** bằng `drive-create-comment` trên tài liệu Spec liên kết. Nội dung comment theo mẫu:
    ```
@@ -99,7 +99,7 @@ Mọi sự cố trong dây chuyền (câu hỏi mở, thiếu đầu vào, test 
    Ticket: <link bản ghi Decisions, điền sau bước 2>
    ```
    Không comment vào chat Lark, không gửi tin nhắn riêng. Câu hỏi về thiết kế thì comment trên màn hình Claude Design (dev làm tay, Claude ghi sẵn nội dung).
-2. **Tạo một bản ghi trong bảng Decisions** bằng `base-v3-create-record`: Vấn đề = câu hỏi; Loại; Nguồn = tên đặc tả và mục; Chặn cái gì = việc cụ thể trong task; Task liên kết; Người hỏi = dev; Người quyết = BA (Nghiệp vụ), PM nếu là phạm vi hoặc hạn, Bằng hoặc anh Huy (Rủi ro cao); Trạng thái = Chưa chốt; Đề xuất; Link comment = link comment ở bước 1. Sau đó cập nhật dòng "Ticket" trong comment.
+2. **Tạo một bản ghi trong bảng Decisions** bằng `base-v3-create-record`: Vấn đề = câu hỏi; Loại; Nguồn = tên đặc tả và mục; Chặn cái gì = việc cụ thể trong task; Task liên kết; Người hỏi = dev; Người quyết = BA (Nghiệp vụ), PM nếu là phạm vi hoặc hạn, Tech Lead (Rủi ro cao); Trạng thái = Chưa chốt; Đề xuất; Link comment = link comment ở bước 1. Sau đó cập nhật dòng "Ticket" trong comment.
 3. **Ghi vào task**: thêm vào Ghi chú Claude dòng `Chờ Decisions <Mã ticket>: <câu hỏi>`, đổi Trạng thái task sang **Chờ quyết định**. Ghi cùng nội dung vào `.bangiao/<Mã>/00-quyet-dinh.md`.
 
 Một câu hỏi, một ticket. Nhiều câu hỏi cùng lúc thì nhiều ticket, nhưng gom vào một comment nếu cùng một mục đặc tả. Không tạo ticket trùng: trước khi tạo, đọc Decisions lọc theo Task liên kết; đã có câu hỏi cùng ý thì chỉ ghi vào Ghi chú Claude và trỏ về ticket cũ.
