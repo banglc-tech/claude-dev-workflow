@@ -85,7 +85,7 @@ Bằng cài một lần trong Settings → Repository → Protected branches và
 | All threads must be resolved | Bật |
 | Merge method | Squash commits, bắt buộc |
 | Delete source branch | Mặc định bật |
-| Token GitLab cấp cho Claude hoặc Paperclip | Vai trò **Developer**, không có quyền merge vào nhánh protected |
+| Token GitLab cấp cho Claude | Vai trò **Developer**, không có quyền merge vào nhánh protected |
 
 File `CODEOWNERS` (đặt tại gốc repo) để GitLab tự yêu cầu Tech Lead duyệt khi MR đụng thư mục nhạy cảm:
 
