@@ -51,6 +51,7 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 - Merge xong: xóa nhánh nguồn (GitLab tự làm), chuyển issue sang **Ready for test**, dán link MR vào dòng việc trên Lark Base và đổi trạng thái sang "Chờ test".
 - Không merge sau **17:00 thứ Sáu** trừ lỗi mức Nghiêm trọng, để không ai phải sửa `dev` cuối tuần.
 - Không bao giờ push thẳng lên `dev`, không force push, không "merge tạm để test". Muốn test chung thì Test kéo nhánh feature về chạy.
+- Task sửa nhiều repo (hai MR cùng tên nhánh): merge MR của repo cung cấp (API, contract, thư viện dùng chung) trước, kiểm tra `dev` của repo đó xanh rồi mới merge MR của repo dùng. Hai MR ghi link và thứ tự merge của nhau trong mô tả.
 
 ## 4a. Push code hằng ngày
 

@@ -23,13 +23,13 @@
 ## Khi mở Claude Code ở thư mục chung nhiều repo
 Áp dụng khi thư mục đang mở không phải repo git (chạy `git rev-parse` báo lỗi) mà chứa nhiều repo con.
 - Trước khi tạo nhánh, xác định task thuộc repo nào: trường Repo trên Base, không có thì theo bảng repo trong CLAUDE.md. Không chắc thì gọi `decider`; không đoán.
-- Mọi lệnh git, glab, test, lint chạy bên trong repo đó (`cd <repo>` hoặc `git -C <repo>`). Không chạy git ở thư mục chung.
-- Nhánh, commit, push, MR đều tính theo từng repo. Task phải sửa hai repo: tạo nhánh cùng tên ở cả hai, mở hai MR, mỗi MR ghi link MR kia trong mô tả.
+- Mọi lệnh git, glab, test, lint chạy bên trong repo đó theo dạng `cd <repo> && <lệnh>`. Không dùng `git -C` (bị chặn, vì làm luật chặn push không nhận ra). Không chạy git ở thư mục chung.
+- Nhánh, commit, push, MR đều tính theo từng repo. Task phải sửa hai repo: tạo nhánh cùng tên ở cả hai, mở hai MR, mỗi MR ghi link MR kia trong mô tả. Thứ tự merge: repo cung cấp (API, contract, thư viện dùng chung) merge trước, repo dùng merge sau; ghi thứ tự này trong mô tả cả hai MR.
 - Kế hoạch và sổ bàn giao ghi rõ repo cho từng file sửa. Sổ bàn giao `.bangiao/<Mã>/` để ở thư mục chung.
 - Không sửa repo không có trong bảng repo của CLAUDE.md.
 
 ## Vùng cấm
-- Không sửa: Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo deploy, `.env*`, `.claude/settings.json`, các file trong `docs/claude-workflow/`.
+- Không sửa (ở mọi thư mục con, không chỉ thư mục gốc): Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo deploy, `.env*`, `.claude/settings.json`, các file trong `docs/claude-workflow/`.
 - Không đọc hay in secret. Không trỏ vào Staging hoặc Production.
 - Không thêm thư viện nếu kế hoạch đã duyệt chưa ghi.
 - Migration: chỉ khi kế hoạch có ghi, phải chạy ngược lại được, chỉ chạy trên Dev.
