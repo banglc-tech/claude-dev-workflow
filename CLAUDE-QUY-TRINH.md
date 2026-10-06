@@ -20,6 +20,14 @@
 - Review MR: `/mr-review <số MR>`. Chỉ kết luận QUA khi mọi vấn đề ở mức Gợi ý; không approve, không merge.
 - Chỉ con người được merge, theo `QUY-TRINH-MERGE.md`: squash merge, người duyệt bấm merge, MR mức Rủi ro cao cần Tech Lead. Claude không push lên `dev`, không merge.
 
+## Khi mở Claude Code ở thư mục chung nhiều repo
+Áp dụng khi thư mục đang mở không phải repo git (chạy `git rev-parse` báo lỗi) mà chứa nhiều repo con.
+- Trước khi tạo nhánh, xác định task thuộc repo nào: trường Repo trên Base, không có thì theo bảng repo trong CLAUDE.md. Không chắc thì gọi `decider`; không đoán.
+- Mọi lệnh git, glab, test, lint chạy bên trong repo đó (`cd <repo>` hoặc `git -C <repo>`). Không chạy git ở thư mục chung.
+- Nhánh, commit, push, MR đều tính theo từng repo. Task phải sửa hai repo: tạo nhánh cùng tên ở cả hai, mở hai MR, mỗi MR ghi link MR kia trong mô tả.
+- Kế hoạch và sổ bàn giao ghi rõ repo cho từng file sửa. Sổ bàn giao `.bangiao/<Mã>/` để ở thư mục chung.
+- Không sửa repo không có trong bảng repo của CLAUDE.md.
+
 ## Vùng cấm
 - Không sửa: Jenkinsfile, Dockerfile, docker-compose*, cấu hình Kubernetes, repo deploy, `.env*`, `.claude/settings.json`, các file trong `docs/claude-workflow/`.
 - Không đọc hay in secret. Không trỏ vào Staging hoặc Production.

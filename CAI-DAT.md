@@ -12,6 +12,7 @@ Có ba tình huống. Tìm đúng tình huống của bạn rồi làm theo.
 | A. Repo dự án chưa có quy trình | Tech Lead hoặc dev được giao | Một lần cho mỗi repo |
 | B. Repo dự án đã có quy trình, bạn mới clone về | Mọi dev | Một lần cho mỗi máy |
 | C. Bộ quy trình có bản mới | Tech Lead hoặc dev được giao | Mỗi lần bộ quy trình đổi |
+| D. Thư mục chung chứa nhiều repo (không phải git) | Mỗi dev, trên máy mình | Một lần, chạy lại khi bộ quy trình đổi |
 
 ## Chuẩn bị máy (mọi dev, một lần)
 
@@ -95,6 +96,34 @@ Script chỉ đè các file do bộ quy trình quản lý. Phần riêng trong `
 
 Muốn biết repo đang chậm bản nào: `--kiem-tra` in "repo đang dùng X, bộ cài mới nhất Y".
 
+## D. Thư mục chung chứa nhiều repo
+
+Dùng khi một dự án gồm nhiều repo đặt chung một thư mục, ví dụ `~/Source/prophub/` chứa `dxs-o2o-backend/`,
+`dxs-o2o-web/`... và bạn muốn mở Claude Code một lần ở thư mục cha để làm task đụng nhiều repo.
+
+```bash
+python3 ~/claude-dev-workflow/scripts/cai-dat.py ~/Source/prophub
+python3 ~/claude-dev-workflow/scripts/cai-dat.py ~/Source/prophub --ca-repo-con   # thêm MR template, check-mr.sh vào từng repo con
+```
+
+Script nhận ra thư mục không phải git và chuyển sang chế độ thư mục chung:
+
+| Ghi vào | Nội dung |
+| --- | --- |
+| Thư mục chung | `.claude/` (agent, lệnh, luật chặn), `.mcp.json`, `docs/claude-workflow/`, `CLAUDE.md` |
+| `CLAUDE.md` của thư mục chung | Tạo từ mẫu thư mục chung, có sẵn bảng các repo con tìm được (sâu tối đa 2 cấp); bạn điền vai trò và lệnh test từng repo |
+| Từng repo con (chỉ khi có `--ca-repo-con`) | MR template, `scripts/check-mr.sh`, dòng `.bangiao/` trong `.gitignore` |
+
+Cách làm việc:
+
+1. Luôn mở Claude Code tại thư mục chung. Agent, lệnh và luật chặn chỉ có hiệu lực khi mở ở đây; mở trong repo con thì Claude chỉ thấy CLAUDE.md, không thấy `/feature`, `/bugfix` và luật chặn (trừ khi repo con cũng đã cài theo mục A).
+2. Trên Base nên có trường Repo cho mỗi task. Claude dựa vào đó để biết sửa repo nào; trống thì suy từ đặc tả và bảng repo, không chắc thì hỏi decider.
+3. Claude chạy git trong từng repo con. Task sửa hai repo thì có hai nhánh cùng tên và hai MR trỏ chéo nhau.
+4. Thư mục chung không có git nên các file cài ở đó không được quản lý phiên bản: mỗi dev tự chạy script trên máy mình, và chạy lại khi bộ quy trình có bản mới. Phần MR template, `check-mr.sh` trong repo con thì commit vào repo con qua MR như mục A.
+5. Kiểm tra: `python3 ~/claude-dev-workflow/scripts/cai-dat.py ~/Source/prophub --kiem-tra`. Lệnh này báo cả repo con nào chưa có MR template hoặc chưa có trong bảng repo của CLAUDE.md.
+
+Repo con nào được làm riêng thường xuyên (mở Claude Code ngay trong repo đó) thì cài thêm cho repo đó theo mục A. Hai cách dùng song song được.
+
 ## Sửa quy trình ở đâu
 
 | Muốn đổi | Sửa ở |
@@ -112,5 +141,6 @@ Sửa thẳng file trong `docs/claude-workflow/` hoặc `.claude/agents/` của 
 | `/mcp` báo `lark-ihouzz` failed | Kiểm tra `echo $LARK_MCP_TOKEN` có giá trị; mở lại terminal rồi mở lại Claude Code. URL trong `.mcp.json` còn `<...>` thì hỏi Tech Lead |
 | `/agents` không thấy agent | Phải mở Claude Code ở thư mục gốc repo (nơi có `.claude/`) |
 | Agent decider báo không nhận model fable | Đổi `model: fable` thành `model: opus` trong bộ quy trình, báo Tech Lead |
-| Script báo "không phải repo git" | `cd` vào repo dự án trước, hoặc truyền đường dẫn: `cai-dat.py ~/Source/<repo>` |
+| Script chạy chế độ thư mục chung trong khi bạn muốn cài cho một repo | Bạn đang đứng ngoài repo: `cd` vào repo hoặc truyền đúng đường dẫn repo |
+| Thư mục chung: `/feature` không có khi mở Claude Code | Đang mở trong repo con; mở lại tại thư mục chung |
 | Script báo không kéo được bản mới | Kiểm tra quyền truy cập GitHub; tạm chạy với `--khong-pull` để dùng bản đang có |

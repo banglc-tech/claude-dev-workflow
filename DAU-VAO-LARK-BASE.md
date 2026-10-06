@@ -31,6 +31,7 @@ Bằng và PM bổ sung các trường này một lần. Thiếu trường là C
 | Trạng thái đặc tả | Chọn một: Nháp / Đã duyệt | Chỉ task có đặc tả Đã duyệt mới được giao Claude |
 | Nhánh / MR | Link | Claude điền khi mở MR |
 | Ghi chú Claude | Văn bản dài | Claude ghi tóm tắt khi chạy qua đêm hoặc khi dừng |
+| Repo | Chọn nhiều: tên các repo | Repo cần sửa; bắt buộc khi dev mở Claude Code ở thư mục chung nhiều repo |
 
 **Bugs** (bảng đang trống, tạo đủ các trường sau)
 
@@ -47,6 +48,7 @@ Bằng và PM bổ sung các trường này một lần. Thiếu trường là C
 | Môi trường | Chọn một: Dev / Staging / Production |
 | Trạng thái | Chọn một: Mới / Đang sửa / Chờ test / Đã đóng / Mở lại |
 | Người báo · Người phụ trách | Người |
+| Repo | Chọn nhiều: tên các repo |
 | Nhánh / MR | Link |
 | Ghi chú Claude | Văn bản dài |
 

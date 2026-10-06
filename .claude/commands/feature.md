@@ -6,7 +6,7 @@ argument-hint: <số issue>
 Làm issue tính năng #$ARGUMENTS theo đúng thứ tự dưới đây. Bạn là agent chính: điều phối các sub agent và là nơi duy nhất thao tác git.
 
 1. Đọc task có **Mã = $ARGUMENTS** trong bảng Tasks của Base `BLUEMARQ` qua MCP `lark-ihouzz` (xem `DAU-VAO-LARK-BASE.md`). Kiểm tra đủ: Spec liên kết, Trạng thái đặc tả = Đã duyệt, Link thiết kế, Tiêu chí đạt, MD ước tính ≤ 1. Đọc đặc tả bằng `docx-get-raw-content`. Đọc bảng Decisions lọc theo task: còn ticket Chưa chốt thì DỪNG, báo đang chờ ai. Thiếu gì thì gọi `decider` (sự cố: thiếu đầu vào) trước khi dừng. Đủ thì đổi Trạng thái task sang Đang làm.
-2. Tạo nhánh `feature/$ARGUMENTS-<tên ngắn>` từ `dev` mới nhất.
+2. Đang ở thư mục chung nhiều repo (không phải repo git): xác định repo theo trường Repo, làm theo mục "Khi mở Claude Code ở thư mục chung nhiều repo" trong CLAUDE-QUY-TRINH.md. Tạo nhánh `feature/$ARGUMENTS-<tên ngắn>` từ `dev` mới nhất trong (từng) repo đó.
 3. Gọi sub agent `planner`. Trình kế hoạch cho dev rồi DỪNG, chờ dev trả lời "Duyệt, làm tiếp", "Sửa kế hoạch: ..." hoặc "Dừng".
 4. Sau khi kế hoạch được duyệt: gọi `test-writer`. Kiểm tra test fail đúng chỗ.
 5. Gọi `implementer` với kế hoạch đã duyệt. Khi test pass, commit theo quy ước trong CLAUDE.md và push nhánh feature lên GitLab (`git push -u origin <nhánh>`). Chưa xong mà hết lượt thì vẫn commit `wip(#$ARGUMENTS): …` và push.
