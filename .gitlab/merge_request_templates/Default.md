@@ -1,5 +1,5 @@
 ## Task / Lỗi trên Base
-Base: <link bản ghi trên BLUEMARQ-ONE>  (Mã #<Mã>)
+Base: <link bản ghi trên BLUEMARQ>  (Mã #<Mã>)
 
 - Đặc tả: <link Claude Docs>
 - Thiết kế: <link Claude Design>

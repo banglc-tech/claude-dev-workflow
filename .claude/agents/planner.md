@@ -8,7 +8,7 @@ model: opus
 Bạn là planner của team Dev Sales Zone – Bluemarq. Bạn chỉ đọc, không sửa file nào.
 
 ## Đầu vào
-Mã task trên Base `BLUEMARQ-ONE`, nội dung đặc tả (agent chính đã đọc bằng `docx-get-raw-content` và lưu vào `.bangiao/<Mã>/dac-ta.md`), Tiêu chí đạt, Link thiết kế, các quyết định Đã chốt trong bảng Decisions, phần ngoài phạm vi.
+Mã task trên Base `BLUEMARQ`, nội dung đặc tả (agent chính đã đọc bằng `docx-get-raw-content` và lưu vào `.bangiao/<Mã>/dac-ta.md`), Tiêu chí đạt, Link thiết kế, các quyết định Đã chốt trong bảng Decisions, phần ngoài phạm vi.
 
 ## Việc cần làm
 1. Đọc CLAUDE.md, rồi đọc phần code liên quan.

@@ -1,16 +1,16 @@
 # Đầu vào của Dev: đặc tả, task, lỗi và câu hỏi nằm trên Lark Base
 
-> Ngoài source code trên GitLab, mọi đầu vào của Dev nằm ở **một Base duy nhất**: `BLUEMARQ-ONE` (Lark Drive › BLUEMARQ ONE). Claude đọc Base và tài liệu qua **MCP Lark của iHouzz**, không đọc qua link dán tay hay nội dung copy vào chat.
+> Ngoài source code trên GitLab, mọi đầu vào của Dev nằm ở **một Base duy nhất**: `BLUEMARQ` (Lark Drive › BLUEMARQ). Claude đọc Base và tài liệu qua **MCP Lark của iHouzz**, không đọc qua link dán tay hay nội dung copy vào chat.
 > Chủ sở hữu quy định: Bằng. Chủ sở hữu dữ liệu trên Base: PM và BA.
 
 ## 1. Nguồn dữ liệu
 
 | Loại đầu vào | Nằm ở đâu | Claude đọc bằng |
 | --- | --- | --- |
-| Task / tính năng | Base `BLUEMARQ-ONE` › bảng **Tasks** | `base-v3-get-record`, `base-v3-list-records` |
-| Lỗi | Base `BLUEMARQ-ONE` › bảng **Bugs** | như trên |
-| Câu hỏi chung, quyết định | Base `BLUEMARQ-ONE` › bảng **Decisions** | như trên, và `base-v3-create-record` khi có câu hỏi mới |
-| Test case | Base `BLUEMARQ-ONE` › bảng **Test Cases** | `base-v3-list-records` (Test ghi, Dev chỉ đọc) |
+| Task / tính năng | Base `BLUEMARQ` › bảng **Tasks** | `base-v3-get-record`, `base-v3-list-records` |
+| Lỗi | Base `BLUEMARQ` › bảng **Bugs** | như trên |
+| Câu hỏi chung, quyết định | Base `BLUEMARQ` › bảng **Decisions** | như trên, và `base-v3-create-record` khi có câu hỏi mới |
+| Test case | Base `BLUEMARQ` › bảng **Test Cases** | `base-v3-list-records` (Test ghi, Dev chỉ đọc) |
 | Đặc tả (PRD, Technical Spec, Feature Spec) | Lark Docs, link nằm trong trường **Spec liên kết** của task | `docx-get-raw-content` |
 | Thiết kế | Claude Design, link nằm trong trường **Link thiết kế** | Mở link (chỉ đọc) |
 | Code, nhánh, MR | GitLab | `git`, `glab` |

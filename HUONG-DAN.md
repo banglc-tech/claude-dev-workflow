@@ -21,7 +21,7 @@ Mở Claude Code tại thư mục gốc repo, đang ở nhánh `dev` đã pull m
 
 ## 3. Trước khi giao: bản ghi trên Base phải đủ
 
-Task và lỗi nằm trên Lark Base `BLUEMARQ-ONE`, Claude tự đọc qua MCP. Bạn chỉ cần đưa **Mã** (trường Mã trên Base). Chi tiết các trường và luồng câu hỏi: `DAU-VAO-LARK-BASE.md`.
+Task và lỗi nằm trên Lark Base `BLUEMARQ`, Claude tự đọc qua MCP. Bạn chỉ cần đưa **Mã** (trường Mã trên Base). Chi tiết các trường và luồng câu hỏi: `DAU-VAO-LARK-BASE.md`.
 
 Claude kiểm tra ở bước đầu và DỪNG nếu thiếu. Tự kiểm tra trước để khỏi mất một vòng.
 

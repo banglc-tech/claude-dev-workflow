@@ -28,13 +28,13 @@ if [[ -z "$DESC_FILE" || ! -f "$DESC_FILE" ]]; then
   chan "không đọc được mô tả MR."
 else
   DESC="$(cat "$DESC_FILE")"
-  grep -qE "^Base: https://ihouzz-com\.sg\.larksuite\.com/base/" <<<"$DESC" || chan "mô tả thiếu dòng 'Base: <link bản ghi trên BLUEMARQ-ONE>'."
+  grep -qE "^Base: https://ihouzz-com\.sg\.larksuite\.com/base/" <<<"$DESC" || chan "mô tả thiếu dòng 'Base: <link bản ghi trên BLUEMARQ>'."
   grep -qE "^## Mức" <<<"$DESC" || chan "mô tả thiếu mục '## Mức'."
   grep -qE "^- \[x\] (Thường|Rủi ro cao|Hạ tầng)" <<<"$DESC" || chan "chưa chọn mức MR (tick một ô trong mục Mức)."
   grep -qE "^## Tiêu chí đạt" <<<"$DESC" || chan "mô tả thiếu bảng 'Tiêu chí đạt → test'."
   grep -qE "^\| TC[0-9]+ \|" <<<"$DESC" || chan "bảng tiêu chí đạt chưa có dòng TC nào."
   grep -qE "^## Kết quả chạy thử trên Dev" <<<"$DESC" || chan "mô tả thiếu mục 'Kết quả chạy thử trên Dev'."
-  grep -qE "<[^>]+>" <<<"$DESC" && grep -qE "<(số issue|Mã|link bản ghi trên BLUEMARQ-ONE|link Claude Docs|link Claude Design|tên test|2–5 dòng|rủi ro, chỗ cần xem kỹ|từng tiêu chí: đạt / không đạt)>" <<<"$DESC" \
+  grep -qE "<[^>]+>" <<<"$DESC" && grep -qE "<(số issue|Mã|link bản ghi trên BLUEMARQ|link Claude Docs|link Claude Design|tên test|2–5 dòng|rủi ro, chỗ cần xem kỹ|từng tiêu chí: đạt / không đạt)>" <<<"$DESC" \
     && chan "mô tả còn chỗ giữ chỗ '<...>' chưa điền."
   if grep -qE "^- \[x\] Thường" <<<"$DESC"; then
     grep -qE "Đặc tả: https?://" <<<"$DESC" || grep -qE "^- \[x\].*bug" <<<"$DESC" || true
