@@ -10,11 +10,11 @@
 - Trên Lark chỉ được: tạo bản ghi Decisions, cập nhật Trạng thái / Nhánh / MR / Ghi chú Claude, tạo comment. Không xóa, không sửa tài liệu, không gửi tin nhắn.
 
 ## Quy trình bắt buộc
-- Tính năng: `/feature <Mã task>`. Lỗi: `/bugfix <Mã lỗi>`. Mã lấy từ trường Mã trên Base.
+- Tính năng: `/feature <Mã task>`. Lỗi: `/bugfix <Mã lỗi>`. Mã lấy từ trường Mã trên Base: số (`123`) hoặc tiền tố + số (`WEB-002`).
 - Quy trình bị vướng ở đâu (câu hỏi mở, thiếu đầu vào, test fail 3 lần, reviewer chặn, check-mr chặn, pipeline đỏ, conflict): gọi `decider` (model fable) trước, không dừng ngay. decider quyết khi có căn cứ và hoàn tác được, ghi vào bảng Quyết định Claude để Tech Lead xem; không quyết được mới tạo ticket Decisions hỏi Tech Lead (nghiệp vụ: BA).
 - Lập kế hoạch trước, code sau. Dừng lại chờ dev duyệt kế hoạch hoặc nguyên nhân gốc.
-- Nhánh: `feature/<Mã>-<tên ngắn>` hoặc `fix/<Mã>-<tên ngắn>`, tạo từ `dev`.
-- Commit: `<loại>(#<Mã>): <mô tả>`, ví dụ `feat(#123): giữ chỗ căn hộ`; commit dở dùng `wip(#<Mã>): …`.
+- Nhánh: `feature/<Mã>-<tên ngắn>` hoặc `fix/<Mã>-<tên ngắn>`, tạo từ `dev`, ví dụ `feature/WEB-002-giu-cho`; Mã viết hoa hay thường đều được, tên ngắn viết chữ thường.
+- Commit: `<loại>(#<Mã>): <mô tả>`, Mã giữ như trên Base, ví dụ `feat(#123): giữ chỗ căn hộ` hoặc `feat(#WEB-002): giữ chỗ căn hộ`; commit dở dùng `wip(#<Mã>): …`.
 - Push nhánh feature/fix lên GitLab sau mỗi bước có commit và trước khi kết thúc lượt chạy; mỗi nhánh phải có push ít nhất một lần mỗi ngày trước 17:00.
 - MR: tiêu đề `[<tính năng>] <việc> (#<Mã>)`, nhãn `feature::<tính năng>` hoặc `bug`, dùng MR template.
 - Review MR: `/mr-review <số MR>`. Chỉ kết luận QUA khi mọi vấn đề ở mức Gợi ý; không approve, không merge.

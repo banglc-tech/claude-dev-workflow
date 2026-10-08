@@ -17,8 +17,11 @@ import subprocess
 import sys
 
 PROTECTED = {"dev", "main", "master"}
-BRANCH_RE = re.compile(r"^(feature|fix)/[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$")
-COMMIT_RE = re.compile(r"^(feat|fix|wip|test|refactor|perf|docs|chore|style)\(#[0-9]+\): \S")
+# Mã: số (123) hoặc tiền tố + số (WEB-002), không quy định hoa thường
+BRANCH_RE = re.compile(r"^(feature|fix)/([A-Za-z][A-Za-z0-9]*-)?[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$")
+COMMIT_RE = re.compile(r"^(feat|fix|wip|test|refactor|perf|docs|chore|style)\(#([A-Za-z][A-Za-z0-9]*-)?[0-9]+\): \S")
+REDIRECT_RE = re.compile(r"^(\d+|&)?(>>?|<<?)")
+REDIRECT_ONLY_RE = re.compile(r"^(\d+|&)?(>>?|<<?)&?$")
 CHECK_FILE = ".claude/kiem-tra-truoc-push"
 
 
@@ -57,6 +60,21 @@ def segments(command):
     return [s.strip() for s in out if s.strip()]
 
 
+def strip_redirects(words):
+    """Bỏ phần chuyển hướng (2>&1, >file, > file, &) để không bị đọc nhầm thành tên nhánh."""
+    out, skip = [], False
+    for w in words:
+        if skip:
+            skip = False
+        elif w == "&":
+            continue
+        elif REDIRECT_ONLY_RE.match(w):
+            skip = True  # dạng "> file": bỏ cả tên file phía sau
+        elif not REDIRECT_RE.match(w):
+            out.append(w)
+    return out
+
+
 def check_commit(words, cwd):
     code, branch = git(["rev-parse", "--abbrev-ref", "HEAD"], cwd)
     if code == 0 and branch in PROTECTED:
@@ -72,7 +90,7 @@ def check_commit(words, cwd):
     if msg is not None and "$(" not in msg:
         first = msg.strip().splitlines()[0] if msg.strip() else ""
         if not COMMIT_RE.match(first):
-            block(f"tiêu đề commit '{first[:80]}' sai mẫu. Đúng: <loại>(#<Mã>): <mô tả>, ví dụ feat(#123): giữ chỗ căn hộ; commit dở dùng wip(#<Mã>): …")
+            block(f"tiêu đề commit '{first[:80]}' sai mẫu. Đúng: <loại>(#<Mã>): <mô tả>, ví dụ feat(#123): giữ chỗ căn hộ hoặc feat(#WEB-002): giữ chỗ căn hộ; commit dở dùng wip(#<Mã>): …")
 
 
 def check_push(words, cwd):
@@ -94,7 +112,7 @@ def check_push(words, cwd):
         if t in PROTECTED:
             block(f"đang đẩy lên {t}. Push nhánh feature/fix rồi mở MR.")
         if t and not BRANCH_RE.match(t):
-            block(f"nhánh '{t}' sai mẫu. Đúng: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>, chữ thường và dấu gạch ngang. Đổi tên: git branch -m <tên mới>.")
+            block(f"nhánh '{t}' sai mẫu. Đúng: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>, tên ngắn chữ thường và dấu gạch ngang, ví dụ feature/WEB-002-giu-cho. Đổi tên: git branch -m <tên mới>.")
     code, top = git(["rev-parse", "--show-toplevel"], cwd)
     if code == 0:
         f = os.path.join(top, CHECK_FILE)
@@ -146,7 +164,7 @@ def main():
                 rest = rest[1:]
         if not rest:
             continue
-        sub, opts = rest[0], rest[1:]
+        sub, opts = rest[0], strip_redirects(rest[1:])
         if sub == "commit":
             check_commit(opts, cwd)
         elif sub == "push":

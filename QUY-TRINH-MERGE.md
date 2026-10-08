@@ -113,8 +113,8 @@ Mỗi MR được review tự động hai lớp trước khi đến tay người
 
 | Rule | Mẫu đúng |
 | --- | --- |
-| Tên nhánh | `feature/<Mã>-<tên ngắn>` hoặc `fix/<Mã>-<tên ngắn>`, chữ thường, dấu gạch ngang |
-| Tiêu đề MR | `[<tính năng>] <việc> (#<Mã>)`, dưới 100 ký tự, Mã trùng với tên nhánh |
+| Tên nhánh | `feature/<Mã>-<tên ngắn>` hoặc `fix/<Mã>-<tên ngắn>`, tên ngắn chữ thường, dấu gạch ngang; Mã là số (`123`) hoặc tiền tố + số (`WEB-002`), không quy định hoa thường |
+| Tiêu đề MR | `[<tính năng>] <việc> (#<Mã>)`, dưới 100 ký tự, Mã trùng với tên nhánh (không phân biệt hoa thường: `#WEB-002` khớp `web-002`) |
 | Mô tả MR | Đủ các mục của template, đã chọn mức, có dòng `Base: <link>`, bảng TC có ít nhất một dòng, không còn chỗ `<...>`, checklist tick hết |
 | Nhãn | `feature::<tính năng>` cho nhánh feature, `bug` cho nhánh fix |
 | Test | Không có `skip`, `only`, `xit` thêm vào so với `dev` |

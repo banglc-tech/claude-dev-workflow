@@ -7,19 +7,23 @@ BRANCH="${1:-}"; TITLE="${2:-}"; DESC_FILE="${3:-}"; LABELS="${4:-}"
 fail=0
 chan() { echo "CHẶN: $1"; fail=1; }
 
-# 1. Tên nhánh: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>; chữ thường, số, dấu gạch
-if ! [[ "$BRANCH" =~ ^(feature|fix)/[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-  chan "tên nhánh '$BRANCH' sai mẫu. Đúng: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>, chữ thường và dấu gạch ngang."
+# Mã: số (123) hoặc tiền tố + số (WEB-002), không quy định hoa thường
+# 1. Tên nhánh: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>; tên ngắn chữ thường, số, dấu gạch
+BRANCH_RE='^(feature|fix)/([A-Za-z][A-Za-z0-9]*-)?[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$'
+if ! [[ "$BRANCH" =~ $BRANCH_RE ]]; then
+  chan "tên nhánh '$BRANCH' sai mẫu. Đúng: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>, tên ngắn chữ thường và dấu gạch ngang, ví dụ feature/WEB-002-giu-cho."
 fi
-ISSUE_IN_BRANCH="$(echo "$BRANCH" | sed -E 's#^(feature|fix)/([0-9]+)-.*#\2#')"
+ISSUE_IN_BRANCH="$(echo "$BRANCH" | sed -E 's#^(feature|fix)/(([A-Za-z][A-Za-z0-9]*-)?[0-9]+)-.*#\2#')"
 
 # 2. Tiêu đề MR: [<tính năng>] <việc> (#<Mã>)
-TITLE_RE='^\[[^]]+\] .+ \(#([0-9]+)\)$'
+TITLE_RE='^\[[^]]+\] .+ \(#(([A-Za-z][A-Za-z0-9]*-)?[0-9]+)\)$'
 if ! [[ "$TITLE" =~ $TITLE_RE ]]; then
   chan "tiêu đề MR sai mẫu. Đúng: [<tính năng>] <việc> (#<Mã>)."
 else
   ISSUE_IN_TITLE="${BASH_REMATCH[1]}"
-  [[ "$ISSUE_IN_TITLE" == "$ISSUE_IN_BRANCH" ]] || chan "Mã trong tiêu đề (#$ISSUE_IN_TITLE) khác Mã trong tên nhánh (#$ISSUE_IN_BRANCH)."
+  # So không phân biệt hoa thường: tiêu đề #WEB-002 khớp nhánh web-002
+  [[ "$(tr '[:upper:]' '[:lower:]' <<<"$ISSUE_IN_TITLE")" == "$(tr '[:upper:]' '[:lower:]' <<<"$ISSUE_IN_BRANCH")" ]] \
+    || chan "Mã trong tiêu đề (#$ISSUE_IN_TITLE) khác Mã trong tên nhánh (#$ISSUE_IN_BRANCH)."
 fi
 [[ ${#TITLE} -le 100 ]] || chan "tiêu đề MR dài hơn 100 ký tự."
 

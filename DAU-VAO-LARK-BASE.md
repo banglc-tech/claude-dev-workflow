@@ -25,7 +25,7 @@ Tech Lead và PM bổ sung các trường này một lần. Thiếu trường l�
 
 | Trường cần thêm | Kiểu | Dùng để |
 | --- | --- | --- |
-| Mã | Số tự tăng | Đặt tên nhánh `feature/<Mã>-<tên ngắn>` và tiêu đề MR `(#<Mã>)` |
+| Mã | Số tự tăng, hoặc tiền tố + số (`WEB-002`) | Đặt tên nhánh `feature/<Mã>-<tên ngắn>` (ví dụ `feature/WEB-002-…`) và tiêu đề MR `(#<Mã>)` |
 | Tiêu chí đạt | Văn bản dài | Danh sách TC1, TC2… áp dụng cho task; BA ghi, copy từ đặc tả |
 | Link thiết kế | Link | Màn hình Claude Design đã duyệt |
 | Trạng thái đặc tả | Chọn một: Nháp / Đã duyệt | Chỉ task có đặc tả Đã duyệt mới được giao Claude |
@@ -37,7 +37,7 @@ Tech Lead và PM bổ sung các trường này một lần. Thiếu trường l�
 
 | Trường | Kiểu |
 | --- | --- |
-| Mã | Số tự tăng |
+| Mã | Số tự tăng, hoặc tiền tố + số (`WEB-002`) |
 | Tiêu đề | Văn bản |
 | Task liên kết | Liên kết sang Tasks |
 | Bước tái hiện | Văn bản dài |
@@ -81,7 +81,7 @@ Giá trị của **Trạng thái** trong Decisions giữ nguyên: Chưa chốt /
 
 Lệnh `/feature <Mã>` và `/bugfix <Mã>` bắt đầu bằng việc đọc Base, không hỏi dev dán link:
 
-1. Tìm bản ghi có **Mã** = số được giao trong bảng Tasks (hoặc Bugs). Không thấy thì dừng.
+1. Tìm bản ghi có **Mã** = Mã được giao (không phân biệt hoa thường, `web-002` tìm ra `WEB-002`) trong bảng Tasks (hoặc Bugs). Không thấy thì dừng.
 2. Kiểm tra đủ trường: task cần Spec liên kết, Trạng thái đặc tả = Đã duyệt, Link thiết kế, Tiêu chí đạt, MD ước tính ≤ 1; lỗi cần Bước tái hiện, Kết quả mong đợi, Tiêu chí bị vi phạm, Mức độ. Thiếu thì ghi vào **Ghi chú Claude** "Thiếu: …" và dừng.
 3. Đọc đặc tả bằng `docx-get-raw-content` từ link trong Spec liên kết. Đặc tả là căn cứ duy nhất; chat hay tin nhắn không phải căn cứ.
 4. Đọc bảng **Decisions** lọc theo Task liên kết: câu hỏi nào còn **Chưa chốt** thì task chưa được làm phần bị chặn. Câu hỏi **Đã chốt** thì đọc để biết quyết định.
