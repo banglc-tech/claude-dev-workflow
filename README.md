@@ -1,6 +1,8 @@
 # claude-dev-workflow
 
-Quy trình giao việc cho Claude Code của team Dev: tính năng mới và sửa lỗi, với 6 sub agent.
+Quy trình giao việc cho Claude Code của team Dev iHouzz: tính năng mới và sửa lỗi, với 6 sub agent.
+
+> Repo này là bản gốc duy nhất. Trang Lark "02 Quy trình giao việc cho Claude" chỉ giữ phần quy định cho người đọc và link về đây; repo đổi quy định thì Tech Lead cập nhật trang Lark trong 2 ngày làm việc.
 
 - `HUONG-DAN.md`: hướng dẫn dùng hằng ngày cho dev (điểm dừng, cách trả lời, sổ bàn giao)
 - `CAI-DAT.md`: **cài bộ quy trình vào repo dự án** (lần đầu, dev mới, cập nhật)
@@ -9,7 +11,7 @@ Quy trình giao việc cho Claude Code của team Dev: tính năng mới và s�
 - `templates/CLAUDE.md`: mẫu CLAUDE.md cho repo dự án (chỉ phần riêng của repo)
 - `templates/CLAUDE-THU-MUC-CHUNG.md`: mẫu CLAUDE.md cho thư mục chung chứa nhiều repo
 - `.claude/agents/`: planner, test-writer, implementer, bug-investigator, reviewer, decider (model fable)
-- `.claude/commands/`: `/feature <số issue>`, `/bugfix <số issue>`, `/mr-review <số MR>`
+- `.claude/commands/`: `/feature <Mã>`, `/bugfix <Mã>`, `/mr-review <số MR>`
 - `scripts/check-mr.sh`: kiểm tra hình thức MR (tên nhánh, tiêu đề, mô tả, nhãn) cho Jenkins
 - `.claude/settings.json`: chặn merge, force push, kubectl, đọc `.env`; khai báo hook
 - `.claude/hooks/`: `kiem-soat-git.py` (chặn commit/push sai quy trình, chạy lệnh kiểm tra trước push), `mo-phien.py` (bối cảnh đầu phiên)

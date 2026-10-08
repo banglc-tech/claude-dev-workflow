@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
 
-Bạn là test-writer của team Dev Sales Zone – Bluemarq.
+Bạn là test-writer của team Dev iHouzz.
 
 ## Việc cần làm
 1. Đọc CLAUDE.md, kế hoạch đã duyệt và các tiêu chí đạt.
@@ -21,6 +21,6 @@ Bạn là test-writer của team Dev Sales Zone – Bluemarq.
 - Cùng một lỗi thử 3 lần vẫn fail thì dừng lại và báo cáo.
 
 ## Báo cáo
-Agent chính lưu báo cáo này vào sổ bàn giao `.bangiao/<số issue>/`. Đọc các file đã có trong thư mục đó trước khi bắt đầu.
+Agent chính lưu báo cáo này vào sổ bàn giao `.bangiao/<Mã>/`. Đọc các file đã có trong thư mục đó trước khi bắt đầu.
 
 Đã làm · File đã tạo/sửa · Lệnh test và kết quả (bao nhiêu fail, fail vì sao) · Câu hỏi · Rủi ro.

@@ -1,16 +1,16 @@
 # Đầu vào của Dev: đặc tả, task, lỗi và câu hỏi nằm trên Lark Base
 
-> Ngoài source code trên GitLab, mọi đầu vào của Dev nằm ở **một Base duy nhất**: `BLUEMARQ` (Lark Drive › BLUEMARQ). Claude đọc Base và tài liệu qua **MCP Lark của iHouzz**, không đọc qua link dán tay hay nội dung copy vào chat.
+> Ngoài source code trên GitLab, mọi đầu vào của Dev nằm ở **một Base duy nhất của dự án** (tên Base ghi trong CLAUDE.md của dự án; ví dụ dự án Bluemarq dùng Base `BLUEMARQ`). Đặc tả luôn là **Lark Docs**, link từ trường Spec liên kết của task. Claude đọc Base và tài liệu qua **MCP Lark của iHouzz**, không đọc qua link dán tay hay nội dung copy vào chat.
 > Chủ sở hữu quy định: Tech Lead. Chủ sở hữu dữ liệu trên Base: PM và BA.
 
 ## 1. Nguồn dữ liệu
 
 | Loại đầu vào | Nằm ở đâu | Claude đọc bằng |
 | --- | --- | --- |
-| Task / tính năng | Base `BLUEMARQ` › bảng **Tasks** | `base-v3-get-record`, `base-v3-list-records` |
-| Lỗi | Base `BLUEMARQ` › bảng **Bugs** | như trên |
-| Câu hỏi chung, quyết định | Base `BLUEMARQ` › bảng **Decisions** | như trên, và `base-v3-create-record` khi có câu hỏi mới |
-| Test case | Base `BLUEMARQ` › bảng **Test Cases** | `base-v3-list-records` (Test ghi, Dev chỉ đọc) |
+| Task / tính năng | Base của dự án › bảng **Tasks** | `base-v3-get-record`, `base-v3-list-records` |
+| Lỗi | Base của dự án › bảng **Bugs** | như trên |
+| Câu hỏi chung, quyết định | Base của dự án › bảng **Decisions** | như trên, và `base-v3-create-record` khi có câu hỏi mới |
+| Test case | Base của dự án › bảng **Test Cases** | `base-v3-list-records` (Test ghi, Dev chỉ đọc) |
 | Đặc tả (PRD, Technical Spec, Feature Spec) | Lark Docs, link nằm trong trường **Spec liên kết** của task | `docx-get-raw-content` |
 | Thiết kế | Claude Design, link nằm trong trường **Link thiết kế** | Mở link (chỉ đọc) |
 | Code, nhánh, MR | GitLab | `git`, `glab` |
@@ -46,7 +46,7 @@ Tech Lead và PM bổ sung các trường này một lần. Thiếu trường l�
 | Mức độ | Chọn một: Nghiêm trọng / Cao / Trung bình / Thấp |
 | Ảnh | Tệp đính kèm |
 | Môi trường | Chọn một: Dev / Staging / Production |
-| Trạng thái | Chọn một: Mới / Đang sửa / Chờ test / Đã đóng / Mở lại |
+| Trạng thái | Chọn một, theo bảng trạng thái chung ở mục 3 (thêm Mở lại) |
 | Người báo · Người phụ trách | Người |
 | Repo | Chọn nhiều: tên các repo |
 | Nhánh / MR | Link |
@@ -85,9 +85,21 @@ Lệnh `/feature <Mã>` và `/bugfix <Mã>` bắt đầu bằng việc đọc Ba
 2. Kiểm tra đủ trường: task cần Spec liên kết, Trạng thái đặc tả = Đã duyệt, Link thiết kế, Tiêu chí đạt, MD ước tính ≤ 1; lỗi cần Bước tái hiện, Kết quả mong đợi, Tiêu chí bị vi phạm, Mức độ. Thiếu thì ghi vào **Ghi chú Claude** "Thiếu: …" và dừng.
 3. Đọc đặc tả bằng `docx-get-raw-content` từ link trong Spec liên kết. Đặc tả là căn cứ duy nhất; chat hay tin nhắn không phải căn cứ.
 4. Đọc bảng **Decisions** lọc theo Task liên kết: câu hỏi nào còn **Chưa chốt** thì task chưa được làm phần bị chặn. Câu hỏi **Đã chốt** thì đọc để biết quyết định.
-5. Đổi Trạng thái task sang **Đang làm** (Bugs: Đang sửa), rồi mới tạo nhánh.
+5. Đổi Trạng thái task hoặc lỗi sang **Đang làm**, rồi mới tạo nhánh.
 
-Khi mở MR: điền link MR vào **Nhánh / MR**, đổi Trạng thái sang **Chờ duyệt** (Bugs: Chờ test sau khi merge). MR template ghi `Base: <link bản ghi>` thay cho `Closes #`.
+Khi mở MR: điền link MR vào **Nhánh / MR**, đổi Trạng thái sang **Chờ duyệt**. MR template ghi `Base: <link bản ghi>`; GitLab không giữ trạng thái việc, không dùng issue GitLab.
+
+**Bảng trạng thái chung** (dùng cho cả Tasks và Bugs, cả trang 01 và 02; Base là nơi duy nhất giữ trạng thái):
+
+| Trạng thái | Nghĩa | Ai đổi |
+| --- | --- | --- |
+| Mới | Đã tạo, chưa ai làm | PM (task), Test (lỗi) |
+| Đang làm | Dev đã nhận, Claude đang chạy | Claude khi bắt đầu `/feature`, `/bugfix` |
+| Chờ quyết định | Có ticket Decisions Chưa chốt chặn việc | Claude |
+| Chờ duyệt | Đã mở MR, chờ review và merge | Claude khi mở MR |
+| Chờ test | Đã merge vào `dev`, Test kiểm | Người merge |
+| Xong | Test đạt, BA đã đối chiếu | Test |
+| Mở lại (chỉ Bugs) | Test kiểm lại vẫn lỗi | Test |
 
 ## 4. Khi quy trình bị vướng: decider quyết trước, không quyết được mới hỏi Tech Lead
 

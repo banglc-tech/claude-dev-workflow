@@ -1,7 +1,7 @@
 ## Task / Lỗi trên Base
-Base: <link bản ghi trên BLUEMARQ>  (Mã #<Mã>)
+Base: <link bản ghi trên Base>  (Mã #<Mã>)
 
-- Đặc tả: <link Claude Docs>
+- Đặc tả: <link Lark Docs>
 - Thiết kế: <link Claude Design>
 
 ## Mức
@@ -19,7 +19,7 @@ Base: <link bản ghi trên BLUEMARQ>  (Mã #<Mã>)
 | TC1 | <tên test> |
 
 ## Checklist
-- [ ] Liên kết issue, có link đặc tả và thiết kế
+- [ ] Có dòng Base: trỏ đúng task, có link đặc tả và thiết kế
 - [ ] Mỗi tiêu chí đạt có ít nhất một test
 - [ ] Pipeline Jenkins xanh
 - [ ] Đã tự chạy thử trên Dev theo từng tiêu chí

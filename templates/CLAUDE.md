@@ -6,6 +6,7 @@
 
 ## Dự án
 - Sản phẩm: <tên sản phẩm / khách hàng>
+- Base dự án trên Lark: `<tên Base>` (Tasks, Bugs, Decisions); repo deploy: `<tên repo>`
 - Stack: <ngôn ngữ, framework, DB>
 - Cấu trúc thư mục chính: <src/..., tests/...>
 - Lệnh:

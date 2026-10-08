@@ -13,6 +13,7 @@
 
 ## Dự án
 - Sản phẩm: <tên sản phẩm / khách hàng>
+- Base dự án trên Lark: `<tên Base>` (Tasks, Bugs, Decisions); repo deploy: `<tên repo>`
 - Cách các repo nói chuyện với nhau: <API, hàng đợi, thư viện dùng chung...>
 
 ## Quy ước code chung

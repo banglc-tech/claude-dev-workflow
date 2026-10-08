@@ -1,6 +1,6 @@
 # Hướng dẫn dùng Claude Code cho team Dev
 
-> Dành cho dev Sales Zone · Bluemarq. Câu hỏi về quy trình hỏi Tech Lead.
+> Dành cho mọi dev iHouzz giao việc cho Claude Code. Câu hỏi về quy trình hỏi Tech Lead.
 > Nguyên tắc chung: Claude làm, dev duyệt, con người merge.
 
 ## 1. Chuẩn bị một lần
@@ -14,14 +14,14 @@
 
 | Việc | Lệnh | Nhánh tạo ra |
 | --- | --- | --- |
-| Tính năng mới | `/feature <số issue>` | `feature/<số issue>-<tên ngắn>` từ `dev` |
-| Sửa lỗi | `/bugfix <số issue>` | `fix/<số issue>-<tên ngắn>` từ `dev` |
+| Tính năng mới | `/feature <Mã>` | `feature/<Mã>-<tên ngắn>` từ `dev` |
+| Sửa lỗi | `/bugfix <Mã>` | `fix/<Mã>-<tên ngắn>` từ `dev` |
 
 Mở Claude Code tại thư mục gốc repo, đang ở nhánh `dev` đã pull mới nhất, rồi gõ lệnh. Không tự tạo nhánh trước, Claude sẽ tạo.
 
 ## 3. Trước khi giao: bản ghi trên Base phải đủ
 
-Task và lỗi nằm trên Lark Base `BLUEMARQ`, Claude tự đọc qua MCP. Bạn chỉ cần đưa **Mã** (trường Mã trên Base). Chi tiết các trường và luồng câu hỏi: `DAU-VAO-LARK-BASE.md`.
+Task và lỗi nằm trên Lark Base của dự án, Claude tự đọc qua MCP. Bạn chỉ cần đưa **Mã** (trường Mã trên Base). Chi tiết các trường và luồng câu hỏi: `DAU-VAO-LARK-BASE.md`.
 
 Claude kiểm tra ở bước đầu và DỪNG nếu thiếu. Tự kiểm tra trước để khỏi mất một vòng.
 
@@ -29,7 +29,7 @@ Claude kiểm tra ở bước đầu và DỪNG nếu thiếu. Tự kiểm tra t
 - Link đặc tả đã duyệt
 - Link thiết kế đã duyệt
 - Tiêu chí đạt, đánh số TC1, TC2...
-- Ước lượng không quá 1 ngày. Lớn hơn thì tách issue trước.
+- Ước lượng không quá 1 ngày. Lớn hơn thì tách task trước.
 
 **Issue lỗi**
 - Bước tái hiện
@@ -42,7 +42,7 @@ Claude kiểm tra ở bước đầu và DỪNG nếu thiếu. Tự kiểm tra t
 ```
 /feature 123
   │
-  ├─ 1. Đọc issue, kiểm tra đủ thông tin
+  ├─ 1. Đọc task trên Base, kiểm tra đủ thông tin
   ├─ 2. Tạo nhánh từ dev
   ├─ 3. planner lập kế hoạch ──────────── ⏸ DỪNG: bạn duyệt kế hoạch
   ├─ 4. test-writer viết test (phải fail)
@@ -73,14 +73,14 @@ Trả lời `mở MR` khi hài lòng. Chưa hài lòng thì nói rõ cần sửa
 ```
 /bugfix 456
   │
-  ├─ 1. Đọc issue, kiểm tra đủ thông tin
+  ├─ 1. Đọc task trên Base, kiểm tra đủ thông tin
   ├─ 2. Mức Nghiêm trọng: chỉ làm khi bạn theo dõi trực tiếp
   ├─ 3. Tạo nhánh từ dev. Lỗi trên Production: DỪNG, đi theo quy trình hotfix
   ├─ 4. bug-investigator tái hiện, viết test fail, tìm nguyên nhân gốc ── ⏸ DỪNG: bạn duyệt
   ├─ 5. implementer sửa nhỏ nhất, test tái hiện pass, test cũ vẫn pass
   ├─ 6. reviewer soát (tối đa 2 vòng)
   ├─ 7. Tóm tắt cho bạn ──────────────────────────────────────────────── ⏸ DỪNG
-  └─ 8. Chỉ khi bạn nói "mở MR": push, mở MR nhãn bug, Closes #456
+  └─ 8. Chỉ khi bạn nói "mở MR": push, mở MR nhãn bug, dòng Base: <link lỗi>
 ```
 
 **Duyệt nguyên nhân gốc.** Kiểm tra:
@@ -111,9 +111,9 @@ Khi Claude báo "Phải dừng": chuyển câu hỏi cho đúng người, có c�
 
 Mọi quyết định decider đã đưa ra đều được liệt kê trong tóm tắt cuối. Lướt qua một lượt, không đồng ý cái nào thì bảo Claude đổi lại, mỗi quyết định đều đổi được trong một commit.
 
-## 7. Sổ bàn giao `.bangiao/<số issue>/`
+## 7. Sổ bàn giao `.bangiao/<Mã>/`
 
-Mỗi issue có một thư mục, không commit (đã trong `.gitignore`). Đây là chỗ đọc lại khi cần biết Claude đã làm gì.
+Mỗi task có một thư mục, không commit (đã trong `.gitignore`). Đây là chỗ đọc lại khi cần biết Claude đã làm gì.
 
 | File | Ai viết | Dùng khi |
 | --- | --- | --- |
@@ -123,11 +123,11 @@ Mỗi issue có một thư mục, không commit (đã trong `.gitignore`). Đây
 | `02-thay-doi.md` / `03-thay-doi.md` | implementer | file đã sửa, kết quả test, lý do sửa file ngoài kế hoạch |
 | `03-danh-gia.md` / `04-danh-gia.md` | reviewer | kết luận CHỐT / CẦN SỬA / CHẶN |
 
-Làm issue mới thì Claude tạo thư mục mới, không dùng lại sổ cũ. Có thể xóa thư mục sau khi MR đã merge.
+Làm task mới thì Claude tạo thư mục mới, không dùng lại sổ cũ. Có thể xóa thư mục sau khi MR đã merge.
 
 ## 8. Mở MR và review
 
-- MR theo template có sẵn: tiêu đề `[<tính năng>] <việc> (#<số issue>)`, nhãn `feature::<tính năng>` hoặc `bug`, bảng tiêu chí → test, checklist.
+- MR theo template có sẵn: tiêu đề `[<tính năng>] <việc> (#<Mã>)`, nhãn `feature::<tính năng>` hoặc `bug`, bảng tiêu chí → test, checklist.
 - Chỉ mở MR khi reviewer kết luận **CHỐT**. Kết luận **CHẶN** thì không mở, dù bạn thấy ổn.
 - Người review MR không phải người giao Claude làm. Người review đọc cả báo cáo reviewer trong sổ bàn giao.
 - Chỉ con người merge. Claude không push lên `dev`, không merge, và settings đã chặn việc này.
@@ -140,14 +140,14 @@ Nhánh đang làm phải lên GitLab ít nhất một lần mỗi ngày trước
 
 ## 9. Chạy qua đêm
 
-Chỉ với issue tính năng đã có kế hoạch được duyệt sẵn ghi trong issue. Claude đi từ bước test đến bước tóm tắt, push nhánh feature (kể cả commit wip) rồi ghi kết quả vào Ghi chú Claude trên Base, không mở MR. Sáng hôm sau đọc comment và sổ bàn giao, rồi quyết định mở MR hay sửa.
+Chỉ với task tính năng đã có kế hoạch được duyệt sẵn ghi trong task. Claude đi từ bước test đến bước tóm tắt, push nhánh feature (kể cả commit wip) rồi ghi kết quả vào Ghi chú Claude trên Base, không mở MR. Sáng hôm sau đọc comment và sổ bàn giao, rồi quyết định mở MR hay sửa.
 
 Không chạy `/bugfix` qua đêm.
 
 ## 10. Việc không làm
 
 **Claude không được** (đã ghi trong CLAUDE.md và settings):
-- Sửa Jenkinsfile, Dockerfile, docker-compose, Kubernetes, repo `bluemarq-deploy`, `.env*`.
+- Sửa Jenkinsfile, Dockerfile, docker-compose, Kubernetes, repo deploy của dự án, `.env*`.
 - Đọc hay in secret. Trỏ vào Staging hoặc Production.
 - Thêm thư viện, chạy migration khi kế hoạch chưa ghi.
 - Xóa, skip hay nới lỏng test có sẵn.
@@ -171,7 +171,7 @@ Không chạy `/bugfix` qua đêm.
 
 ```
 glab auth login                 # một lần
-git checkout dev && git pull    # trước mỗi issue
+git checkout dev && git pull    # trước mỗi task
 /feature 123                    # tính năng
 /bugfix 456                     # lỗi
 

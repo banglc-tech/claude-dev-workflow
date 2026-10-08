@@ -1,7 +1,7 @@
 # Quy trình duyệt và merge vào nhánh `dev`
 
-> Áp dụng cho mọi MR vào `dev` của dự án Sales Zone · Bluemarq. Chủ sở hữu: Tech Lead.
-> Nguyên tắc: **`dev` luôn chạy được.** Một MR vào `dev` là một issue đã xong, đã có test, đã được người khác xem.
+> Áp dụng cho mọi MR vào `dev` của các dự án iHouzz. Chủ sở hữu: Tech Lead.
+> Nguyên tắc: **`dev` luôn chạy được.** Một MR vào `dev` là một task đã xong, đã có test, đã được người khác xem.
 
 ## 1. Ba mức MR
 
@@ -26,8 +26,8 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 - [ ] Nhánh đã cập nhật với `dev` mới nhất (không có conflict, không "behind")
 
 **Người kiểm tra**
-- [ ] MR liên kết đúng issue, có link đặc tả và thiết kế (với tính năng) hoặc bước tái hiện (với lỗi)
-- [ ] Mỗi tiêu chí đạt trong issue có ít nhất một test, tên test ghi mã TC
+- [ ] MR có dòng `Base:` trỏ đúng task, có link đặc tả và thiết kế (với tính năng) hoặc bước tái hiện (với lỗi)
+- [ ] Mỗi tiêu chí đạt trong task có ít nhất một test, tên test ghi mã TC
 - [ ] Không có test nào bị xóa, skip hay nới lỏng so với `dev`
 - [ ] Diff chỉ gồm file trong kế hoạch đã duyệt; file ngoài kế hoạch có ghi lý do
 - [ ] Không có thư viện mới ngoài kế hoạch; không lộ secret, không có cấu hình môi trường thật
@@ -38,17 +38,17 @@ GitLab chặn bằng cài đặt ở mục 6. Reviewer kiểm tra bằng mắt n
 ## 3. Review làm gì, trong bao lâu
 
 - **Thời hạn:** MR mở trước 14:00 thì review xong trong ngày; sau 14:00 thì trước 10:00 hôm sau. Quá hạn thì người mở MR nhắc trong buổi 9:30.
-- **Người review** đọc theo thứ tự: issue và tiêu chí đạt → báo cáo `reviewer` trong sổ bàn giao → test → code. Đọc test trước code để biết MR có kiểm chứng đúng điều cần kiểm chứng không.
-- **Comment** ghi rõ mức: **Chặn** (phải sửa mới merge), **Nên sửa** (sửa trong MR này hoặc mở issue mới, người review quyết), **Gợi ý** (tùy người mở MR). Comment mức Chặn phải nêu tiêu chí đạt hoặc rule nào bị vi phạm.
+- **Người review** đọc theo thứ tự: task và tiêu chí đạt → báo cáo `reviewer` trong sổ bàn giao → test → code. Đọc test trước code để biết MR có kiểm chứng đúng điều cần kiểm chứng không.
+- **Comment** ghi rõ mức: **Chặn** (phải sửa mới merge), **Nên sửa** (sửa trong MR này hoặc tạo task mới trên Base, người review quyết), **Gợi ý** (tùy người mở MR). Comment mức Chặn phải nêu tiêu chí đạt hoặc rule nào bị vi phạm.
 - **Người mở MR** sửa và trả lời từng comment; sửa xong thì nhấn resolve và ghi "đã sửa ở <commit>". Không resolve comment của người khác khi chưa sửa.
 - Tối đa **2 vòng sửa**. Sang vòng 3 thì hai bên gọi nhau 15 phút thay vì comment tiếp; vẫn không chốt được thì Tech Lead quyết. Với vòng review nội bộ của Claude (sub agent reviewer), sau 2 vòng là `decider` phân xử và báo Tech Lead.
 - Code do Claude viết review như code người viết: không nhẹ tay vì "AI viết", không nặng tay vì "AI viết". Kiểm kỹ thêm hai chỗ AI hay mắc: test chỉ để pass, và sửa lan ra ngoài phạm vi.
 
 ## 4. Cách merge
 
-- **Squash merge**, một commit cho một MR. Tiêu đề commit lấy từ tiêu đề MR: `[<tính năng>] <việc> (#<số issue>)`. Nội dung commit gồm dòng `Closes #<số issue>`.
+- **Squash merge**, một commit cho một MR. Tiêu đề commit lấy từ tiêu đề MR: `[<tính năng>] <việc> (#<Mã>)`. Nội dung commit gồm dòng `dòng `Base: <link>``.
 - **Người duyệt cuối cùng là người bấm merge**, không phải người mở MR. Với mức Rủi ro cao, Tech Lead bấm.
-- Merge xong: xóa nhánh nguồn (GitLab tự làm), chuyển issue sang **Ready for test**, dán link MR vào dòng việc trên Lark Base và đổi trạng thái sang "Chờ test".
+- Merge xong: xóa nhánh nguồn (GitLab tự làm), đổi Trạng thái trên Base sang **Chờ test**, dán link MR vào dòng việc trên Lark Base và đổi trạng thái sang "Chờ test".
 - Không merge sau **17:00 thứ Sáu** trừ lỗi mức Nghiêm trọng, để không ai phải sửa `dev` cuối tuần.
 - Không bao giờ push thẳng lên `dev`, không force push, không "merge tạm để test". Muốn test chung thì Test kéo nhánh feature về chạy.
 - Task sửa nhiều repo (hai MR cùng tên nhánh): merge MR của repo cung cấp (API, contract, thư viện dùng chung) trước, kiểm tra `dev` của repo đó xanh rồi mới merge MR của repo dùng. Hai MR ghi link và thứ tự merge của nhau trong mô tả.
@@ -67,7 +67,7 @@ Code chỉ nằm trên máy một người là code chưa tồn tại với team
 ## 5. Khi `dev` hỏng sau merge
 
 - Pipeline `dev` đỏ hoặc Test báo luồng chính không chạy được: **revert trong vòng 1 giờ**, không sửa đè. Người merge chịu trách nhiệm revert; ai thấy trước thì báo trong nhóm Lark dự án.
-- Revert xong, mở lại issue, gắn nhãn `bug`, ghi rõ nguyên nhân vào comment. Sửa trên nhánh mới và đi lại quy trình MR từ đầu.
+- Revert xong, mở lại bản ghi trên Base, gắn nhãn `bug`, ghi rõ nguyên nhân vào comment. Sửa trên nhánh mới và đi lại quy trình MR từ đầu.
 - Hai lần revert cùng một nguyên nhân thì ghi bài học vào `CLAUDE.md` và, nếu là lỗ hổng review, thêm vào checklist mục 2.
 
 ## 6. Cài đặt GitLab để quy trình được công cụ chặn
@@ -113,9 +113,9 @@ Mỗi MR được review tự động hai lớp trước khi đến tay người
 
 | Rule | Mẫu đúng |
 | --- | --- |
-| Tên nhánh | `feature/<số issue>-<tên ngắn>` hoặc `fix/<số issue>-<tên ngắn>`, chữ thường, dấu gạch ngang |
-| Tiêu đề MR | `[<tính năng>] <việc> (#<số issue>)`, dưới 100 ký tự, số issue trùng với tên nhánh |
-| Mô tả MR | Đủ các mục của template, đã chọn mức, có `Closes #`, bảng TC có ít nhất một dòng, không còn chỗ `<...>`, checklist tick hết |
+| Tên nhánh | `feature/<Mã>-<tên ngắn>` hoặc `fix/<Mã>-<tên ngắn>`, chữ thường, dấu gạch ngang |
+| Tiêu đề MR | `[<tính năng>] <việc> (#<Mã>)`, dưới 100 ký tự, Mã trùng với tên nhánh |
+| Mô tả MR | Đủ các mục của template, đã chọn mức, có dòng `Base: <link>`, bảng TC có ít nhất một dòng, không còn chỗ `<...>`, checklist tick hết |
 | Nhãn | `feature::<tính năng>` cho nhánh feature, `bug` cho nhánh fix |
 | Test | Không có `skip`, `only`, `xit` thêm vào so với `dev` |
 
@@ -134,7 +134,7 @@ Kết luận của Claude và việc tiếp theo:
 | Kết luận | Điều kiện | Nhãn | Người review làm gì |
 | --- | --- | --- | --- |
 | **QUA** | Chỉ có Gợi ý, hoặc không có gì | `review::qua` | Đọc tóm tắt, xác nhận, merge. Gợi ý sửa hay không tùy người mở MR |
-| **CẦN NGƯỜI XEM** | Có Nên sửa, không có Chặn | `review::can-xem` | Quyết sửa trong MR này hay mở issue mới |
+| **CẦN NGƯỜI XEM** | Có Nên sửa, không có Chặn | `review::can-xem` | Quyết sửa trong MR này hay tạo task mới trên Base |
 | **CHẶN** | Có Chặn | `review::chan` | Không đọc tiếp. Người mở MR sửa và đẩy lại |
 
 Ba ranh giới không được vượt:
@@ -146,4 +146,4 @@ Theo dõi hằng tuần: Tech Lead xem tỷ lệ MR Claude kết luận QUA mà 
 
 ## 9. Tóm tắt một dòng cho dev
 
-Mở MR đúng mức → script và `/mr-review` lọc trước → người khác review trong ngày → đủ điều kiện mục 2 → người duyệt squash merge → issue sang Ready for test. `dev` hỏng thì revert trong 1 giờ.
+Mở MR đúng mức → script và `/mr-review` lọc trước → người khác review trong ngày → đủ điều kiện mục 2 → người duyệt squash merge → đổi Trạng thái trên Base sang Chờ test. `dev` hỏng thì revert trong 1 giờ.

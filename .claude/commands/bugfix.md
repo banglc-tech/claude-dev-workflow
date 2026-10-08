@@ -1,11 +1,11 @@
 ---
-description: Sửa một issue lỗi theo quy trình của team (tái hiện → nguyên nhân gốc → sửa → review)
-argument-hint: <số issue>
+description: Sửa một lỗi trên Base theo quy trình của team (tái hiện → nguyên nhân gốc → sửa → review)
+argument-hint: <Mã>
 ---
 
 Sửa lỗi #$ARGUMENTS theo đúng thứ tự dưới đây. Bạn là agent chính: điều phối các sub agent và là nơi duy nhất thao tác git.
 
-1. Đọc lỗi có **Mã = $ARGUMENTS** trong bảng Bugs của Base `BLUEMARQ` qua MCP Lark của iHouzz (các tool `lark-api-ihouzz-*`; tên server tùy máy dev, ví dụ `iHouzz_mcp` hay `lark-ihouzz`) (xem `DAU-VAO-LARK-BASE.md`). Kiểm tra đủ: Bước tái hiện, Kết quả mong đợi, Kết quả thực tế, Tiêu chí bị vi phạm, Mức độ. Đọc đặc tả của Task liên kết bằng `docx-get-raw-content`. Thiếu gì thì gọi `decider` (sự cố: thiếu đầu vào) trước khi dừng. Đủ thì đổi Trạng thái sang Đang sửa.
+1. Đọc lỗi có **Mã = $ARGUMENTS** trong bảng Bugs của Base của dự án qua MCP Lark của iHouzz (các tool `lark-api-ihouzz-*`; tên server tùy máy dev, ví dụ `iHouzz_mcp` hay `lark-ihouzz`) (xem `DAU-VAO-LARK-BASE.md`). Kiểm tra đủ: Bước tái hiện, Kết quả mong đợi, Kết quả thực tế, Tiêu chí bị vi phạm, Mức độ. Đọc đặc tả của Task liên kết bằng `docx-get-raw-content`. Thiếu gì thì gọi `decider` (sự cố: thiếu đầu vào) trước khi dừng. Đủ thì đổi Trạng thái sang Đang sửa.
 2. Mức độ Nghiêm trọng: báo dev, chỉ làm khi dev đang theo dõi trực tiếp.
 3. Đang ở thư mục chung nhiều repo (không phải repo git): xác định repo theo trường Repo, làm theo mục "Khi mở Claude Code ở thư mục chung nhiều repo" trong CLAUDE-QUY-TRINH.md. Tạo nhánh `fix/$ARGUMENTS-<tên ngắn>` từ `dev` mới nhất trong (từng) repo đó. Môi trường = Production thì DỪNG và nhắc dev làm theo mục hotfix trong tài liệu Quy trình quản lý source Git & deploy.
 4. Gọi sub agent `bug-investigator`. Trình nguyên nhân gốc và cách sửa cho dev rồi DỪNG, chờ dev duyệt.
@@ -21,8 +21,8 @@ Bất kỳ lúc nào một bước không đi tiếp được (sub agent nêu c�
 - Cùng một sự cố tái diễn sau khi decider đã quyết thì không gọi decider lần hai; tạo ticket cho Tech Lead ngay.
 decider không thay thế hai điểm dev duyệt (kế hoạch, nguyên nhân gốc). Khi tóm tắt cho dev, liệt kê mọi quyết định decider đã đưa ra trong lần chạy này.
 ## Sổ bàn giao
-Mỗi issue có một thư mục `.bangiao/$ARGUMENTS/` (đã có trong .gitignore), gồm `00-quyet-dinh.md` (decider, ghi nối) và các file dưới đây. Sau mỗi sub agent, lưu nguyên văn báo cáo vào đúng file, và giao cho sub agent sau đọc file của bước trước:
+Mỗi task có một thư mục `.bangiao/$ARGUMENTS/` (đã có trong .gitignore), gồm `00-quyet-dinh.md` (decider, ghi nối) và các file dưới đây. Sau mỗi sub agent, lưu nguyên văn báo cáo vào đúng file, và giao cho sub agent sau đọc file của bước trước:
 - `01-dieu-tra.md` (bug-investigator, kèm dòng "Dev duyệt: <tên>, <ngày>")
 - `02-thay-doi.md` (implementer)
 - `03-danh-gia.md` (reviewer, kết luận CHỐT / CẦN SỬA / CHẶN)
-Bắt đầu issue mới thì không dùng lại sổ của issue khác.
+Bắt đầu task mới thì không dùng lại sổ của task khác.

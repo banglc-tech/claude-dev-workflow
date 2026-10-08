@@ -7,19 +7,19 @@ BRANCH="${1:-}"; TITLE="${2:-}"; DESC_FILE="${3:-}"; LABELS="${4:-}"
 fail=0
 chan() { echo "CHẶN: $1"; fail=1; }
 
-# 1. Tên nhánh: feature/<số issue>-<tên ngắn> hoặc fix/<số issue>-<tên ngắn>; chữ thường, số, dấu gạch
+# 1. Tên nhánh: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>; chữ thường, số, dấu gạch
 if ! [[ "$BRANCH" =~ ^(feature|fix)/[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-  chan "tên nhánh '$BRANCH' sai mẫu. Đúng: feature/<số issue>-<tên ngắn> hoặc fix/<số issue>-<tên ngắn>, chữ thường và dấu gạch ngang."
+  chan "tên nhánh '$BRANCH' sai mẫu. Đúng: feature/<Mã>-<tên ngắn> hoặc fix/<Mã>-<tên ngắn>, chữ thường và dấu gạch ngang."
 fi
 ISSUE_IN_BRANCH="$(echo "$BRANCH" | sed -E 's#^(feature|fix)/([0-9]+)-.*#\2#')"
 
-# 2. Tiêu đề MR: [<tính năng>] <việc> (#<số issue>)
+# 2. Tiêu đề MR: [<tính năng>] <việc> (#<Mã>)
 TITLE_RE='^\[[^]]+\] .+ \(#([0-9]+)\)$'
 if ! [[ "$TITLE" =~ $TITLE_RE ]]; then
-  chan "tiêu đề MR sai mẫu. Đúng: [<tính năng>] <việc> (#<số issue>)."
+  chan "tiêu đề MR sai mẫu. Đúng: [<tính năng>] <việc> (#<Mã>)."
 else
   ISSUE_IN_TITLE="${BASH_REMATCH[1]}"
-  [[ "$ISSUE_IN_TITLE" == "$ISSUE_IN_BRANCH" ]] || chan "số issue trong tiêu đề (#$ISSUE_IN_TITLE) khác số issue trong tên nhánh (#$ISSUE_IN_BRANCH)."
+  [[ "$ISSUE_IN_TITLE" == "$ISSUE_IN_BRANCH" ]] || chan "Mã trong tiêu đề (#$ISSUE_IN_TITLE) khác Mã trong tên nhánh (#$ISSUE_IN_BRANCH)."
 fi
 [[ ${#TITLE} -le 100 ]] || chan "tiêu đề MR dài hơn 100 ký tự."
 
@@ -28,13 +28,13 @@ if [[ -z "$DESC_FILE" || ! -f "$DESC_FILE" ]]; then
   chan "không đọc được mô tả MR."
 else
   DESC="$(cat "$DESC_FILE")"
-  grep -qE "^Base: https://ihouzz-com\.sg\.larksuite\.com/base/" <<<"$DESC" || chan "mô tả thiếu dòng 'Base: <link bản ghi trên BLUEMARQ>'."
+  grep -qE "^Base: https://ihouzz-com\.sg\.larksuite\.com/base/" <<<"$DESC" || chan "mô tả thiếu dòng 'Base: <link bản ghi trên Base>'."
   grep -qE "^## Mức" <<<"$DESC" || chan "mô tả thiếu mục '## Mức'."
   grep -qE "^- \[x\] (Thường|Rủi ro cao|Hạ tầng)" <<<"$DESC" || chan "chưa chọn mức MR (tick một ô trong mục Mức)."
   grep -qE "^## Tiêu chí đạt" <<<"$DESC" || chan "mô tả thiếu bảng 'Tiêu chí đạt → test'."
   grep -qE "^\| TC[0-9]+ \|" <<<"$DESC" || chan "bảng tiêu chí đạt chưa có dòng TC nào."
   grep -qE "^## Kết quả chạy thử trên Dev" <<<"$DESC" || chan "mô tả thiếu mục 'Kết quả chạy thử trên Dev'."
-  grep -qE "<[^>]+>" <<<"$DESC" && grep -qE "<(số issue|Mã|link bản ghi trên BLUEMARQ|link Claude Docs|link Claude Design|tên test|2–5 dòng|rủi ro, chỗ cần xem kỹ|từng tiêu chí: đạt / không đạt)>" <<<"$DESC" \
+  grep -qE "<[^>]+>" <<<"$DESC" && grep -qE "<(số issue|Mã|link bản ghi trên Base|link Lark Docs|link Claude Docs|link Claude Design|tên test|2–5 dòng|rủi ro, chỗ cần xem kỹ|từng tiêu chí: đạt / không đạt)>" <<<"$DESC" \
     && chan "mô tả còn chỗ giữ chỗ '<...>' chưa điền."
   if grep -qE "^- \[x\] Thường" <<<"$DESC"; then
     grep -qE "Đặc tả: https?://" <<<"$DESC" || grep -qE "^- \[x\].*bug" <<<"$DESC" || true
